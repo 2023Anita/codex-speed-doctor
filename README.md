@@ -34,7 +34,7 @@ The GitHub Pages page supports instant in-page switching between Chinese, Englis
 最快只读运行：
 
 ```bash
-git clone https://github.com/ReinaMacCredy/codex-speed-doctor.git
+git clone https://github.com/2023Anita/codex-speed-doctor.git
 cd codex-speed-doctor
 PYTHONPATH=src python3 -m codex_speed_doctor.cli
 ```
