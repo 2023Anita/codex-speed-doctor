@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Codex Speed Doctor 是本地优先、默认只读的 Codex 启动速度诊断工具。"
+    />
+    <title>Codex Speed Doctor</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #0f172a;
+        --muted: #475569;
+        --subtle: #64748b;
+        --line: #d9e7ef;
+        --paper: #f8fbfd;
+        --panel: #ffffff;
+        --teal: #0f766e;
+        --cyan: #0891b2;
+        --green: #16a34a;
+        --amber: #d97706;
+        --danger: #dc2626;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 78vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        color: #f8fafc;
+        background: #0f172a;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(8, 20, 45, 0.9) 0%, rgba(8, 20, 45, 0.72) 42%, rgba(8, 20, 45, 0.16) 100%),
+          url("assets/hero-codex-diagnostic.png") center / cover no-repeat;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 96px;
+        background: linear-gradient(180deg, rgba(248, 251, 253, 0), var(--paper));
+      }
+
+      .hero-inner,
+      .section-inner {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        padding: 42px 0 96px;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: center;
+        margin-bottom: 72px;
+      }
+
+      .language-switch {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 8px;
+        background: rgba(15, 23, 42, 0.42);
+        backdrop-filter: blur(14px);
+      }
+
+      .language-switch button {
+        min-height: 34px;
+        padding: 0 11px;
+        border: 0;
+        border-radius: 6px;
+        color: #dbeafe;
+        background: transparent;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .language-switch button[aria-pressed="true"] {
+        color: #0f172a;
+        background: #ecfeff;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        color: #bdebf2;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.16);
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: 58px;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .hero-copy {
+        max-width: 700px;
+        margin: 22px 0 0;
+        color: #dbeafe;
+        font-size: 20px;
+        line-height: 1.65;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        font-weight: 800;
+      }
+
+      .button.primary {
+        background: #ecfeff;
+        color: #0f172a;
+      }
+
+      .button.secondary {
+        color: #e0f2fe;
+        background: rgba(15, 23, 42, 0.42);
+      }
+
+      section {
+        padding: 76px 0;
+      }
+
+      .intro-strip {
+        padding-top: 28px;
+      }
+
+      .status-grid,
+      .metric-grid,
+      .safety-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .status-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stat,
+      .metric,
+      .step,
+      .safety-item,
+      .command-panel,
+      .image-frame {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
+      }
+
+      .stat,
+      .metric,
+      .step,
+      .safety-item {
+        padding: 22px;
+      }
+
+      .stat strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 24px;
+      }
+
+      .metric strong,
+      .step strong,
+      .safety-item strong {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 16px;
+      }
+
+      .stat span,
+      .metric p,
+      .step p,
+      .safety-item p,
+      .caption,
+      .section-copy {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .metric p,
+      .step p,
+      .safety-item p {
+        margin: 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 36px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 34px;
+        line-height: 1.14;
+        letter-spacing: 0;
+      }
+
+      .section-copy {
+        max-width: 570px;
+        margin: 0;
+      }
+
+      .command-panel {
+        overflow: hidden;
+      }
+
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 16px;
+        border-bottom: 1px solid #d8e6ef;
+        background: #eef7fb;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dot.red {
+        background: var(--danger);
+      }
+
+      .dot.amber {
+        background: var(--amber);
+      }
+
+      .dot.green {
+        background: var(--green);
+      }
+
+      pre {
+        margin: 0;
+        padding: 22px;
+        overflow-x: auto;
+        color: #dbeafe;
+        background: #0b1220;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .image-frame {
+        position: relative;
+        overflow: hidden;
+        margin-top: 24px;
+      }
+
+      .image-frame img {
+        width: 100%;
+      }
+
+      .caption {
+        padding: 14px 18px 18px;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .workflow-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .step {
+        min-height: 150px;
+      }
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 14px;
+        border-radius: 50%;
+        color: #ecfeff;
+        background: var(--teal);
+        font-weight: 800;
+      }
+
+      .safety-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .band {
+        background: #eef7fb;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .footer {
+        padding: 34px 0;
+        color: var(--subtle);
+        border-top: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 900px) {
+        .hero-top,
+        .section-head {
+          display: block;
+        }
+
+        .language-switch {
+          margin-top: 18px;
+        }
+
+        h1 {
+          font-size: 44px;
+        }
+
+        .hero-copy {
+          font-size: 18px;
+        }
+
+        .section-copy {
+          margin-top: 12px;
+        }
+
+        .status-grid,
+        .metric-grid,
+        .workflow-grid,
+        .safety-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .hero {
+          min-height: 84vh;
+        }
+
+        .hero-inner,
+        .section-inner {
+          width: min(100% - 28px, 1120px);
+        }
+
+        h1 {
+          font-size: 36px;
+        }
+
+        h2 {
+          font-size: 28px;
+        }
+
+        section {
+          padding: 54px 0;
+        }
+
+        .status-grid,
+        .metric-grid,
+        .workflow-grid,
+        .safety-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-top">
+          <p class="eyebrow" data-i18n="eyebrow">本地优先的 Codex 诊断</p>
+          <div class="language-switch" aria-label="Language switcher">
+            <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+            <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+            <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+          </div>
+        </div>
+        <h1 data-i18n="title">Codex Speed Doctor</h1>
+        <p class="hero-copy" data-i18n="heroCopy">
+          在清理任何东西之前，先找出 Codex 为什么变慢。用只读报告诊断
+          sessions、logs、plugins、skills、model cache 和本地进程。
+        </p>
+        <div class="actions" aria-label="Project links">
+          <a class="button primary" href="https://github.com/ReinaMacCredy/codex-speed-doctor#readme" data-i18n="ctaReadme">打开 README</a>
+          <a class="button secondary" href="SAFETY.md" data-i18n="ctaSafety">安全边界</a>
+          <a class="button secondary" href="TROUBLESHOOTING.md" data-i18n="ctaTrouble">排障指南</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro-strip">
+        <div class="section-inner">
+          <div class="status-grid" aria-label="Project promises">
+            <div class="stat">
+              <strong data-i18n="statReadOnlyTitle">只读优先</strong>
+              <span data-i18n="statReadOnlyBody">不自动清理、删除或改配置。</span>
+            </div>
+            <div class="stat">
+              <strong data-i18n="statPseudoTitle">默认脱敏</strong>
+              <span data-i18n="statPseudoBody">默认隐藏真实本地路径和 session 文件名。</span>
+            </div>
+            <div class="stat">
+              <strong data-i18n="statHandoffTitle">先 handoff</strong>
+              <span data-i18n="statHandoffBody">归档前先让长对话可继续接上。</span>
+            </div>
+            <div class="stat">
+              <strong data-i18n="statBackupTitle">备份意识</strong>
+              <span data-i18n="statBackupBody">清理动作放到单独确认过的维护步骤里。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="commandTitle">一条命令先体检</h2>
+            <p class="section-copy" data-i18n="commandCopy">
+              先在本地运行报告。第一次输出应该解释问题形状，再决定是否归档、恢复、移动插件或重建缓存。
+            </p>
+          </div>
+          <div class="command-panel">
+            <div class="terminal-bar" aria-hidden="true">
+              <span class="dot red"></span>
+              <span class="dot amber"></span>
+              <span class="dot green"></span>
+            </div>
+            <pre><code>git clone https://github.com/ReinaMacCredy/codex-speed-doctor.git
+cd codex-speed-doctor
+PYTHONPATH=src python3 -m codex_speed_doctor.cli
+
+# JSON output
+PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="mapTitle">本地状态地图</h2>
+            <p class="section-copy" data-i18n="mapCopy">
+              Codex 启动变慢可能来自多个本地因素。工具把这些检查拆开，避免把日志问题误判成 session 问题，也避免把插件 warning 误判成模型问题。
+            </p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong data-i18n="metricSessionsTitle">Sessions</strong>
+              <p data-i18n="metricSessionsBody">标记需要先写 handoff 再归档的大 active session。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="metricLogsTitle">Logs</strong>
+              <p data-i18n="metricLogsBody">汇总日志大小和 warning target，不打印私人日志正文。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="metricPluginsTitle">Plugins and Skills</strong>
+              <p data-i18n="metricPluginsBody">统计本地加载面，并突出插件与 Skill 的 warning 模式。</p>
+            </div>
+          </div>
+          <figure class="image-frame">
+            <img
+              src="assets/local-state-map.png"
+              alt="A clinical diagnostic map of Codex local state modules"
+              data-i18n-attr="alt:mapAlt"
+            />
+            <figcaption class="caption" data-i18n="mapCaption">
+              图片不承担关键文字说明；页面文字负责标注 sessions、logs、plugins、skills 和 model cache。
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="workflowTitle">归档前先 handoff</h2>
+            <p class="section-copy" data-i18n="workflowCopy">
+              更安全的流程是：诊断、给重要线程写继续说明、只归档不活跃的大 session、建立索引，并保留恢复路径。
+            </p>
+          </div>
+          <div class="workflow-grid">
+            <div class="step">
+              <span class="step-number">1</span>
+              <strong data-i18n="stepDiagnoseTitle">诊断</strong>
+              <p data-i18n="stepDiagnoseBody">测量 active sessions、logs、plugins、skills、cache 和进程。</p>
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              <strong data-i18n="stepHandoffTitle">Handoff</strong>
+              <p data-i18n="stepHandoffBody">写下目标、当前状态、关键文件、命令和下一步。</p>
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              <strong data-i18n="stepArchiveTitle">归档</strong>
+              <p data-i18n="stepArchiveBody">只移动不再需要留在热路径里的 session。</p>
+            </div>
+            <div class="step">
+              <span class="step-number">4</span>
+              <strong data-i18n="stepIndexTitle">索引</strong>
+              <p data-i18n="stepIndexBody">留下可检索记录，之后能按主题找回旧工作。</p>
+            </div>
+            <div class="step">
+              <span class="step-number">5</span>
+              <strong data-i18n="stepRestoreTitle">恢复</strong>
+              <p data-i18n="stepRestoreBody">需要找回 session 时使用备份和恢复脚本。</p>
+            </div>
+          </div>
+          <figure class="image-frame">
+            <img
+              src="assets/handoff-archive-flow.png"
+              alt="A clinical handoff style flow from large chat to handoff note to archive"
+              data-i18n-attr="alt:workflowAlt"
+            />
+            <figcaption class="caption" data-i18n="workflowCaption">
+              Handoff 是一份紧凑、可读的续接说明，不替代原始 session，而是回到工作的安全桥梁。
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="safetyTitle">安全边界</h2>
+            <p class="section-copy" data-i18n="safetyCopy">
+              Codex Speed Doctor 是诊断工具，不是清理器。它先回答“可能慢在哪里”，再让维护动作进入明确确认流程。
+            </p>
+          </div>
+          <div class="safety-grid">
+            <div class="safety-item">
+              <strong data-i18n="safetyCleanupTitle">不自动清理</strong>
+              <p data-i18n="safetyCleanupBody">CLI 不删除 sessions、不轮转日志、不移动 worktree。</p>
+            </div>
+            <div class="safety-item">
+              <strong data-i18n="safetyCredTitle">不读取凭证文件</strong>
+              <p>
+                <span data-i18n="safetyCredPrefix">报告不会读取或输出 </span><code>auth.json</code><span data-i18n="safetyCredSuffix"> 内容。</span>
+              </p>
+            </div>
+            <div class="safety-item">
+              <strong data-i18n="safetyDetailsTitle">详细信息需主动开启</strong>
+              <p>
+                <span data-i18n="safetyDetailsPrefix">真实路径和 session 文件名需要显式传入 </span><code>--details</code><span data-i18n="safetyDetailsSuffix">。</span>
+              </p>
+            </div>
+            <div class="safety-item">
+              <strong data-i18n="safetyReviewedTitle">清理保持可审阅</strong>
+              <p data-i18n="safetyReviewedBody">归档和恢复应放在 backup-first 的维护流程里。</p>
+            </div>
+          </div>
+          <figure class="image-frame">
+            <img
+              src="assets/safety-boundary.png"
+              alt="A read-only safety boundary diagram for local diagnostics"
+              data-i18n-attr="alt:safetyAlt"
+            />
+            <figcaption class="caption" data-i18n="safetyCaption">
+              默认姿态是本地、只读、脱敏，所以第一次诊断足够低风险。
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="section-inner footer-inner">
+        <span data-i18n="footerLeft">Codex Speed Doctor · MIT</span>
+        <span><span data-i18n="footerRight">GitHub Pages 源文件：</span><code>docs/index.html</code></span>
+      </div>
+    </footer>
+
+    <script>
+      const translations = {
+        zh: {
+          metaDescription: "Codex Speed Doctor 是本地优先、默认只读的 Codex 启动速度诊断工具。",
+          eyebrow: "本地优先的 Codex 诊断",
+          title: "Codex Speed Doctor",
+          heroCopy: "在清理任何东西之前，先找出 Codex 为什么变慢。用只读报告诊断 sessions、logs、plugins、skills、model cache 和本地进程。",
+          ctaReadme: "打开 README",
+          ctaSafety: "安全边界",
+          ctaTrouble: "排障指南",
+          statReadOnlyTitle: "只读优先",
+          statReadOnlyBody: "不自动清理、删除或改配置。",
+          statPseudoTitle: "默认脱敏",
+          statPseudoBody: "默认隐藏真实本地路径和 session 文件名。",
+          statHandoffTitle: "先 handoff",
+          statHandoffBody: "归档前先让长对话可继续接上。",
+          statBackupTitle: "备份意识",
+          statBackupBody: "清理动作放到单独确认过的维护步骤里。",
+          commandTitle: "一条命令先体检",
+          commandCopy: "先在本地运行报告。第一次输出应该解释问题形状，再决定是否归档、恢复、移动插件或重建缓存。",
+          mapTitle: "本地状态地图",
+          mapCopy: "Codex 启动变慢可能来自多个本地因素。工具把这些检查拆开，避免把日志问题误判成 session 问题，也避免把插件 warning 误判成模型问题。",
+          metricSessionsTitle: "Sessions",
+          metricSessionsBody: "标记需要先写 handoff 再归档的大 active session。",
+          metricLogsTitle: "Logs",
+          metricLogsBody: "汇总日志大小和 warning target，不打印私人日志正文。",
+          metricPluginsTitle: "Plugins and Skills",
+          metricPluginsBody: "统计本地加载面，并突出插件与 Skill 的 warning 模式。",
+          mapAlt: "Codex 本地状态模块的临床诊断地图",
+          mapCaption: "图片不承担关键文字说明；页面文字负责标注 sessions、logs、plugins、skills 和 model cache。",
+          workflowTitle: "归档前先 handoff",
+          workflowCopy: "更安全的流程是：诊断、给重要线程写继续说明、只归档不活跃的大 session、建立索引，并保留恢复路径。",
+          stepDiagnoseTitle: "诊断",
+          stepDiagnoseBody: "测量 active sessions、logs、plugins、skills、cache 和进程。",
+          stepHandoffTitle: "Handoff",
+          stepHandoffBody: "写下目标、当前状态、关键文件、命令和下一步。",
+          stepArchiveTitle: "归档",
+          stepArchiveBody: "只移动不再需要留在热路径里的 session。",
+          stepIndexTitle: "索引",
+          stepIndexBody: "留下可检索记录，之后能按主题找回旧工作。",
+          stepRestoreTitle: "恢复",
+          stepRestoreBody: "需要找回 session 时使用备份和恢复脚本。",
+          workflowAlt: "从大聊天到 handoff 说明再到归档的临床交接流程",
+          workflowCaption: "Handoff 是一份紧凑、可读的续接说明，不替代原始 session，而是回到工作的安全桥梁。",
+          safetyTitle: "安全边界",
+          safetyCopy: "Codex Speed Doctor 是诊断工具，不是清理器。它先回答“可能慢在哪里”，再让维护动作进入明确确认流程。",
+          safetyCleanupTitle: "不自动清理",
+          safetyCleanupBody: "CLI 不删除 sessions、不轮转日志、不移动 worktree。",
+          safetyCredTitle: "不读取凭证文件",
+          safetyCredPrefix: "报告不会读取或输出 ",
+          safetyCredSuffix: " 内容。",
+          safetyDetailsTitle: "详细信息需主动开启",
+          safetyDetailsPrefix: "真实路径和 session 文件名需要显式传入 ",
+          safetyDetailsSuffix: "。",
+          safetyReviewedTitle: "清理保持可审阅",
+          safetyReviewedBody: "归档和恢复应放在 backup-first 的维护流程里。",
+          safetyAlt: "本地诊断的只读安全边界图",
+          safetyCaption: "默认姿态是本地、只读、脱敏，所以第一次诊断足够低风险。",
+          footerLeft: "Codex Speed Doctor · MIT",
+          footerRight: "GitHub Pages 源文件："
+        },
+        en: {
+          metaDescription: "Codex Speed Doctor is a local-first, read-only diagnostic tool for slow Codex Desktop or CLI startup.",
+          eyebrow: "Local-first Codex diagnostics",
+          title: "Codex Speed Doctor",
+          heroCopy: "Find why Codex feels slow before you clean anything. Diagnose sessions, logs, plugins, skills, model cache, and local processes with a read-only report.",
+          ctaReadme: "Open README",
+          ctaSafety: "Safety boundary",
+          ctaTrouble: "Troubleshooting",
+          statReadOnlyTitle: "Read-only",
+          statReadOnlyBody: "No automatic cleanup, deletion, or config rewrite.",
+          statPseudoTitle: "Pseudonymous",
+          statPseudoBody: "Default output hides raw local paths and session filenames.",
+          statHandoffTitle: "Handoff-first",
+          statHandoffBody: "Keep long-running work resumable before archiving sessions.",
+          statBackupTitle: "Backup-aware",
+          statBackupBody: "Cleanup belongs in a separate reviewed maintenance step.",
+          commandTitle: "Start With One Command",
+          commandCopy: "Run the report locally. The first pass should explain the shape of the problem before any archive, restore, plugin move, or cache rebuild.",
+          mapTitle: "Local State Map",
+          mapCopy: "Codex startup can feel slow for several local reasons. The tool keeps those checks separate so a log issue is not mistaken for a session issue, and a plugin warning is not mistaken for a model issue.",
+          metricSessionsTitle: "Sessions",
+          metricSessionsBody: "Flags large active sessions that should get handoff notes before archival.",
+          metricLogsTitle: "Logs",
+          metricLogsBody: "Summarizes log size and warning targets without printing private log bodies.",
+          metricPluginsTitle: "Plugins and Skills",
+          metricPluginsBody: "Counts local loading surface and highlights warning patterns.",
+          mapAlt: "A clinical diagnostic map of Codex local state modules",
+          mapCaption: "The visual labels are supplied by the page, not by the generated image: sessions, logs, plugins, skills, and model cache are checked as separate local-state signals.",
+          workflowTitle: "Handoff Before Archive",
+          workflowCopy: "The safest workflow is diagnose, write a short continuation note for valuable threads, archive only inactive giants, index the handoff, and keep restore instructions close.",
+          stepDiagnoseTitle: "Diagnose",
+          stepDiagnoseBody: "Measure active sessions, logs, plugins, skills, cache, and processes.",
+          stepHandoffTitle: "Handoff",
+          stepHandoffBody: "Write the goal, current status, key files, commands, and next step.",
+          stepArchiveTitle: "Archive",
+          stepArchiveBody: "Move only sessions that no longer need to stay in the hot path.",
+          stepIndexTitle: "Index",
+          stepIndexBody: "Keep a searchable record so old work can be found by topic.",
+          stepRestoreTitle: "Restore",
+          stepRestoreBody: "Use backups and restore scripts when a session needs to return.",
+          workflowAlt: "A clinical handoff style flow from large chat to handoff note to archive",
+          workflowCaption: "Handoff means a compact, human-readable continuation note. It is not a replacement for the original session; it is the safe bridge back to the work.",
+          safetyTitle: "Safety Boundary",
+          safetyCopy: "Codex Speed Doctor is a diagnostic tool, not a cleaner. It is meant to answer what is likely slow before anyone reaches for mutating maintenance commands.",
+          safetyCleanupTitle: "No automatic cleanup",
+          safetyCleanupBody: "The CLI does not delete sessions, rotate logs, or move worktrees.",
+          safetyCredTitle: "No credential file readout",
+          safetyCredPrefix: "The report does not read or print ",
+          safetyCredSuffix: " contents.",
+          safetyDetailsTitle: "Details are opt-in",
+          safetyDetailsPrefix: "Raw paths and session filenames require the explicit ",
+          safetyDetailsSuffix: " flag.",
+          safetyReviewedTitle: "Cleanup stays reviewed",
+          safetyReviewedBody: "Archive and restore steps belong in backup-first workflows.",
+          safetyAlt: "A read-only safety boundary diagram for local diagnostics",
+          safetyCaption: "The default posture is local, read-only, and pseudonymous. That makes the first diagnosis low-risk even when Codex is already slow.",
+          footerLeft: "Codex Speed Doctor · MIT",
+          footerRight: "GitHub Pages source: "
+        },
+        ja: {
+          metaDescription: "Codex Speed Doctor は、Codex の起動が遅い原因を調べるローカル優先・既定読み取り専用の診断ツールです。",
+          eyebrow: "ローカル優先の Codex 診断",
+          title: "Codex Speed Doctor",
+          heroCopy: "何かを整理する前に、Codex が遅く感じる理由を見つけます。読み取り専用レポートで sessions、logs、plugins、skills、model cache、ローカルプロセスを診断します。",
+          ctaReadme: "README を開く",
+          ctaSafety: "安全境界",
+          ctaTrouble: "トラブルシュート",
+          statReadOnlyTitle: "読み取り専用",
+          statReadOnlyBody: "自動クリーンアップ、削除、設定変更は行いません。",
+          statPseudoTitle: "既定で匿名化",
+          statPseudoBody: "実ローカルパスと session ファイル名を既定で隠します。",
+          statHandoffTitle: "Handoff 優先",
+          statHandoffBody: "アーカイブ前に長い会話を再開できる状態にします。",
+          statBackupTitle: "バックアップ前提",
+          statBackupBody: "整理作業は確認済みの保守ステップに分離します。",
+          commandTitle: "まず 1 コマンドで診断",
+          commandCopy: "ローカルでレポートを実行します。最初の出力で問題の形を把握してから、アーカイブ、復元、プラグイン移動、キャッシュ再作成を判断します。",
+          mapTitle: "ローカル状態マップ",
+          mapCopy: "Codex の起動遅延には複数のローカル要因があります。このツールはチェックを分離し、ログ問題を session 問題、プラグイン warning をモデル問題と誤解しないようにします。",
+          metricSessionsTitle: "Sessions",
+          metricSessionsBody: "アーカイブ前に handoff が必要な大きな active session を検出します。",
+          metricLogsTitle: "Logs",
+          metricLogsBody: "ログ本文を出さずに、サイズと warning target を集計します。",
+          metricPluginsTitle: "Plugins and Skills",
+          metricPluginsBody: "ローカルの読み込み面を数え、プラグインと Skill の warning パターンを示します。",
+          mapAlt: "Codex のローカル状態モジュールを示す臨床診断風マップ",
+          mapCaption: "重要なラベルは画像ではなくページ側で示します。sessions、logs、plugins、skills、model cache を別々のシグナルとして確認します。",
+          workflowTitle: "アーカイブ前に handoff",
+          workflowCopy: "安全な流れは、診断、重要スレッドの継続メモ作成、非アクティブな大きな session のみのアーカイブ、索引化、復元手順の保持です。",
+          stepDiagnoseTitle: "診断",
+          stepDiagnoseBody: "active sessions、logs、plugins、skills、cache、プロセスを測定します。",
+          stepHandoffTitle: "Handoff",
+          stepHandoffBody: "目的、現状、重要ファイル、コマンド、次の一手を書きます。",
+          stepArchiveTitle: "アーカイブ",
+          stepArchiveBody: "ホットパスに残す必要がない session だけを移動します。",
+          stepIndexTitle: "索引",
+          stepIndexBody: "後からトピックで旧作業を見つけられる記録を残します。",
+          stepRestoreTitle: "復元",
+          stepRestoreBody: "session が必要になったらバックアップと復元スクリプトを使います。",
+          workflowAlt: "大きなチャットから handoff メモ、アーカイブへ進む臨床引き継ぎ風フロー",
+          workflowCaption: "Handoff は短く読める継続メモです。元の session を置き換えるものではなく、作業へ戻るための安全な橋です。",
+          safetyTitle: "安全境界",
+          safetyCopy: "Codex Speed Doctor は診断ツールであり、クリーナーではありません。変更を伴う保守コマンドの前に、どこが遅そうかを答えます。",
+          safetyCleanupTitle: "自動清掃なし",
+          safetyCleanupBody: "CLI は sessions を削除せず、ログをローテートせず、worktree を移動しません。",
+          safetyCredTitle: "認証ファイルを読み出さない",
+          safetyCredPrefix: "レポートは ",
+          safetyCredSuffix: " の内容を読み取り・出力しません。",
+          safetyDetailsTitle: "詳細は明示的に有効化",
+          safetyDetailsPrefix: "実パスと session ファイル名には ",
+          safetyDetailsSuffix: " フラグが必要です。",
+          safetyReviewedTitle: "整理はレビュー可能に",
+          safetyReviewedBody: "アーカイブと復元は backup-first の保守フローに置きます。",
+          safetyAlt: "ローカル診断の読み取り専用安全境界図",
+          safetyCaption: "既定はローカル、読み取り専用、匿名化です。最初の診断を低リスクにできます。",
+          footerLeft: "Codex Speed Doctor · MIT",
+          footerRight: "GitHub Pages ソース: "
+        },
+        ko: {
+          metaDescription: "Codex Speed Doctor는 Codex 시작이 느린 원인을 확인하는 로컬 우선, 기본 읽기 전용 진단 도구입니다.",
+          eyebrow: "로컬 우선 Codex 진단",
+          title: "Codex Speed Doctor",
+          heroCopy: "무언가를 정리하기 전에 Codex가 왜 느린지 먼저 확인합니다. 읽기 전용 보고서로 sessions, logs, plugins, skills, model cache, 로컬 프로세스를 진단합니다.",
+          ctaReadme: "README 열기",
+          ctaSafety: "안전 경계",
+          ctaTrouble: "문제 해결",
+          statReadOnlyTitle: "읽기 전용",
+          statReadOnlyBody: "자동 정리, 삭제, 설정 변경을 하지 않습니다.",
+          statPseudoTitle: "기본 익명화",
+          statPseudoBody: "실제 로컬 경로와 session 파일 이름을 기본으로 숨깁니다.",
+          statHandoffTitle: "Handoff 우선",
+          statHandoffBody: "아카이브 전에 긴 대화를 이어갈 수 있게 만듭니다.",
+          statBackupTitle: "백업 인식",
+          statBackupBody: "정리 작업은 별도로 검토된 유지보수 단계에 둡니다.",
+          commandTitle: "먼저 한 줄 명령으로 진단",
+          commandCopy: "로컬에서 보고서를 실행합니다. 첫 출력으로 문제의 형태를 파악한 뒤 아카이브, 복원, 플러그인 이동, 캐시 재생성을 결정합니다.",
+          mapTitle: "로컬 상태 지도",
+          mapCopy: "Codex 시작 지연은 여러 로컬 요인에서 올 수 있습니다. 이 도구는 검사를 분리해 로그 문제를 session 문제로, 플러그인 warning을 모델 문제로 오해하지 않게 합니다.",
+          metricSessionsTitle: "Sessions",
+          metricSessionsBody: "아카이브 전에 handoff가 필요한 큰 active session을 표시합니다.",
+          metricLogsTitle: "Logs",
+          metricLogsBody: "개인 로그 본문을 출력하지 않고 로그 크기와 warning target을 요약합니다.",
+          metricPluginsTitle: "Plugins and Skills",
+          metricPluginsBody: "로컬 로딩 범위를 계산하고 플러그인과 Skill warning 패턴을 강조합니다.",
+          mapAlt: "Codex 로컬 상태 모듈의 임상 진단식 지도",
+          mapCaption: "핵심 라벨은 이미지가 아니라 페이지 텍스트로 제공합니다. sessions, logs, plugins, skills, model cache를 별도 신호로 확인합니다.",
+          workflowTitle: "아카이브 전에 handoff",
+          workflowCopy: "가장 안전한 흐름은 진단, 중요한 스레드의 이어받기 메모 작성, 비활성 대형 session만 아카이브, 색인 작성, 복원 경로 보관입니다.",
+          stepDiagnoseTitle: "진단",
+          stepDiagnoseBody: "active sessions, logs, plugins, skills, cache, 프로세스를 측정합니다.",
+          stepHandoffTitle: "Handoff",
+          stepHandoffBody: "목표, 현재 상태, 핵심 파일, 명령, 다음 단계를 적습니다.",
+          stepArchiveTitle: "아카이브",
+          stepArchiveBody: "핫 경로에 남길 필요가 없는 session만 이동합니다.",
+          stepIndexTitle: "색인",
+          stepIndexBody: "나중에 주제로 예전 작업을 찾을 수 있는 기록을 남깁니다.",
+          stepRestoreTitle: "복원",
+          stepRestoreBody: "session이 다시 필요할 때 백업과 복원 스크립트를 사용합니다.",
+          workflowAlt: "큰 채팅에서 handoff 문서와 아카이브로 이어지는 임상 인계식 흐름",
+          workflowCaption: "Handoff는 짧고 읽기 쉬운 이어받기 메모입니다. 원본 session을 대체하지 않고 작업으로 돌아가는 안전한 다리 역할을 합니다.",
+          safetyTitle: "안전 경계",
+          safetyCopy: "Codex Speed Doctor는 진단 도구이지 클리너가 아닙니다. 변경을 수반하는 유지보수 명령 전에 무엇이 느릴 가능성이 있는지 먼저 답합니다.",
+          safetyCleanupTitle: "자동 정리 없음",
+          safetyCleanupBody: "CLI는 sessions를 삭제하거나 로그를 회전하거나 worktree를 이동하지 않습니다.",
+          safetyCredTitle: "인증 파일 읽기 없음",
+          safetyCredPrefix: "보고서는 ",
+          safetyCredSuffix: " 내용을 읽거나 출력하지 않습니다.",
+          safetyDetailsTitle: "상세 정보는 선택 사항",
+          safetyDetailsPrefix: "실제 경로와 session 파일 이름은 명시적으로 ",
+          safetyDetailsSuffix: " 플래그가 필요합니다.",
+          safetyReviewedTitle: "정리는 검토 가능하게",
+          safetyReviewedBody: "아카이브와 복원은 backup-first 유지보수 흐름에 둡니다.",
+          safetyAlt: "로컬 진단을 위한 읽기 전용 안전 경계 다이어그램",
+          safetyCaption: "기본 자세는 로컬, 읽기 전용, 익명화입니다. 첫 진단을 낮은 위험으로 시작할 수 있습니다.",
+          footerLeft: "Codex Speed Doctor · MIT",
+          footerRight: "GitHub Pages 소스: "
+        }
+      };
+
+      const supportedLanguages = Object.keys(translations);
+      const languageAliases = {
+        "zh-CN": "zh",
+        "zh-Hans": "zh",
+        "zh": "zh",
+        "en": "en",
+        "ja": "ja",
+        "ko": "ko"
+      };
+
+      function resolveInitialLanguage() {
+        const saved = localStorage.getItem("codex-speed-doctor-language");
+        if (supportedLanguages.includes(saved)) return saved;
+        const browserLanguage = navigator.language || "zh";
+        return languageAliases[browserLanguage] || languageAliases[browserLanguage.split("-")[0]] || "zh";
+      }
+
+      function applyLanguage(language) {
+        const dictionary = translations[language] || translations.zh;
+        document.documentElement.lang = language === "zh" ? "zh-Hans" : language;
+        document.querySelector('meta[name="description"]').setAttribute("content", dictionary.metaDescription);
+
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.getAttribute("data-i18n");
+          if (dictionary[key]) element.textContent = dictionary[key];
+        });
+
+        document.querySelectorAll("[data-i18n-attr]").forEach((element) => {
+          element.getAttribute("data-i18n-attr").split(",").forEach((binding) => {
+            const [attribute, key] = binding.split(":").map((part) => part.trim());
+            if (attribute && key && dictionary[key]) {
+              element.setAttribute(attribute, dictionary[key]);
+            }
+          });
+        });
+
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.lang === language));
+        });
+
+        localStorage.setItem("codex-speed-doctor-language", language);
+      }
+
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
+      applyLanguage(resolveInitialLanguage());
+    </script>
+  </body>
+</html>
