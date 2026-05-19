@@ -29,6 +29,8 @@ classifiers = [
 
 [project.scripts]
 codex-speed-doctor = "codex_speed_doctor.cli:main"
+codex-speed-doctor-archive = "codex_speed_doctor.archive:main"
+codex-speed-doctor-defer-archive = "codex_speed_doctor.defer_archive:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

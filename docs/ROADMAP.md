@@ -14,9 +14,16 @@
 
 - HTML report export
 - Safer handoff checklist generator
-- Backup-first session archive helper
 - Plugin/Skill warning explainer
 - CI fixtures for multiple Codex schema versions
+
+## v0.2 Updates
+
+- Backup-first session archive worker with manifest input
+- Deferred archive launcher for starting archive jobs from inside Codex
+- JSON status files for `queued`, `waiting`, `archiving`, `done`, `failed`, and `skipped`
+- `launchctl` background execution with Terminal fallback on macOS
+- Restore script and archive index generation for selected sessions
 
 ## Non-Goals
 

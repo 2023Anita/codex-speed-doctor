@@ -35,7 +35,7 @@ Use `--details` only when you explicitly want local paths and session filenames.
 
 ## What This Tool Does Not Do
 
-It does not:
+The default `codex-speed-doctor` diagnostic command does not:
 
 - delete sessions
 - move active sessions
@@ -48,6 +48,20 @@ It does not:
 - stop Node, Codex, or other developer processes
 
 Those actions can be useful, but they should be done by a separate backup-first maintenance workflow after the user reviews the report.
+
+## Explicit Archive Commands
+
+Archive support is intentionally separate from the read-only diagnostic command.
+Use it only after you have selected exact sessions and created handoff notes.
+
+- `codex-speed-doctor-defer-archive` starts an external job and waits for Codex
+  to exit before mutating local state.
+- `codex-speed-doctor-archive` performs the backup-first archive work directly.
+
+Both commands require a manifest with explicit absolute paths. The archive worker
+backs up `state_5.sqlite`, moves selected session files into `archived_sessions`,
+updates the selected thread records, and writes restore artifacts. It does not
+delete sessions permanently.
 
 ## Recommended Manual Fix Order
 

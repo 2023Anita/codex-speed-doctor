@@ -4,12 +4,68 @@
   "graph": {},
   "nodes": [
     {
+      "label": "test_archive.py",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L1",
+      "id": "test_archive",
+      "community": 3
+    },
+    {
+      "label": "make_threads_db()",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L16",
+      "id": "test_archive_make_threads_db",
+      "community": 3
+    },
+    {
+      "label": "make_archive_fixture()",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L37",
+      "id": "test_archive_make_archive_fixture",
+      "community": 3
+    },
+    {
+      "label": "ArchiveTests",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L55",
+      "id": "test_archive_archivetests",
+      "community": 3
+    },
+    {
+      "label": ".test_archive_moves_session_and_writes_restore_artifacts()",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L56",
+      "id": "test_archive_archivetests_test_archive_moves_session_and_writes_restore_artifacts",
+      "community": 3
+    },
+    {
+      "label": ".test_archive_skips_when_codex_is_running_without_wait()",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L87",
+      "id": "test_archive_archivetests_test_archive_skips_when_codex_is_running_without_wait",
+      "community": 3
+    },
+    {
+      "label": ".test_defer_archive_dry_run_writes_queued_status_without_moving_session()",
+      "file_type": "code",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L105",
+      "id": "test_archive_archivetests_test_defer_archive_dry_run_writes_queued_status_without_moving_session",
+      "community": 3
+    },
+    {
       "label": "test_cli.py",
       "file_type": "code",
       "source_file": "tests/test_cli.py",
       "source_location": "L1",
       "id": "test_cli",
-      "community": 0
+      "community": 4
     },
     {
       "label": "make_state_db()",
@@ -17,7 +73,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L11",
       "id": "test_cli_make_state_db",
-      "community": 0
+      "community": 4
     },
     {
       "label": "make_logs_db()",
@@ -25,7 +81,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L20",
       "id": "test_cli_make_logs_db",
-      "community": 0
+      "community": 4
     },
     {
       "label": "CliTests",
@@ -33,7 +89,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L41",
       "id": "test_cli_clitests",
-      "community": 0
+      "community": 4
     },
     {
       "label": ".test_collect_report_flags_large_session_and_warnings()",
@@ -41,7 +97,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L42",
       "id": "test_cli_clitests_test_collect_report_flags_large_session_and_warnings",
-      "community": 0
+      "community": 4
     },
     {
       "label": ".test_render_text_hides_session_filename_by_default()",
@@ -49,7 +105,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L67",
       "id": "test_cli_clitests_test_render_text_hides_session_filename_by_default",
-      "community": 0
+      "community": 4
     },
     {
       "label": ".test_redact_report_hides_local_path_and_session_filename()",
@@ -57,7 +113,7 @@
       "source_file": "tests/test_cli.py",
       "source_location": "L82",
       "id": "test_cli_clitests_test_redact_report_hides_local_path_and_session_filename",
-      "community": 0
+      "community": 4
     },
     {
       "label": "__init__.py",
@@ -65,7 +121,71 @@
       "source_file": "src/codex_speed_doctor/__init__.py",
       "source_location": "L1",
       "id": "init",
-      "community": 7
+      "community": 9
+    },
+    {
+      "label": "defer_archive.py",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L1",
+      "id": "defer_archive",
+      "community": 2
+    },
+    {
+      "label": "validate_manifest()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L18",
+      "id": "defer_archive_validate_manifest",
+      "community": 2
+    },
+    {
+      "label": "build_archive_command()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L36",
+      "id": "defer_archive_build_archive_command",
+      "community": 2
+    },
+    {
+      "label": "launch_with_launchctl()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L56",
+      "id": "defer_archive_launch_with_launchctl",
+      "community": 2
+    },
+    {
+      "label": "launch_with_terminal()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L76",
+      "id": "defer_archive_launch_with_terminal",
+      "community": 2
+    },
+    {
+      "label": "defer()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L87",
+      "id": "defer_archive_defer",
+      "community": 2
+    },
+    {
+      "label": "parse_args()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L137",
+      "id": "defer_archive_parse_args",
+      "community": 2
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L152",
+      "id": "defer_archive_main",
+      "community": 2
     },
     {
       "label": "cli.py",
@@ -73,7 +193,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L1",
       "id": "cli",
-      "community": 2
+      "community": 1
     },
     {
       "label": "PathSize",
@@ -81,7 +201,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L20",
       "id": "cli_pathsize",
-      "community": 3
+      "community": 5
     },
     {
       "label": "SessionSummary",
@@ -89,7 +209,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L26",
       "id": "cli_sessionsummary",
-      "community": 3
+      "community": 5
     },
     {
       "label": "LogSummary",
@@ -97,7 +217,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L35",
       "id": "cli_logsummary",
-      "community": 4
+      "community": 7
     },
     {
       "label": "PluginSkillSummary",
@@ -105,7 +225,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L43",
       "id": "cli_pluginskillsummary",
-      "community": 2
+      "community": 1
     },
     {
       "label": "ModelCacheSummary",
@@ -113,7 +233,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L51",
       "id": "cli_modelcachesummary",
-      "community": 1
+      "community": 6
     },
     {
       "label": "ProcessSummary",
@@ -121,7 +241,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L58",
       "id": "cli_processsummary",
-      "community": 1
+      "community": 8
     },
     {
       "label": "Report",
@@ -129,7 +249,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L65",
       "id": "cli_report",
-      "community": 3
+      "community": 5
     },
     {
       "label": "size_bytes()",
@@ -137,7 +257,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L76",
       "id": "cli_size_bytes",
-      "community": 2
+      "community": 1
     },
     {
       "label": "mb()",
@@ -145,7 +265,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L91",
       "id": "cli_mb",
-      "community": 5
+      "community": 1
     },
     {
       "label": "gb()",
@@ -153,7 +273,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L95",
       "id": "cli_gb",
-      "community": 3
+      "community": 5
     },
     {
       "label": "open_sqlite_readonly()",
@@ -161,7 +281,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L99",
       "id": "cli_open_sqlite_readonly",
-      "community": 4
+      "community": 7
     },
     {
       "label": "query_one()",
@@ -169,7 +289,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L109",
       "id": "cli_query_one",
-      "community": 4
+      "community": 7
     },
     {
       "label": "summarize_sessions()",
@@ -177,7 +297,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L117",
       "id": "cli_summarize_sessions",
-      "community": 3
+      "community": 5
     },
     {
       "label": "summarize_logs()",
@@ -185,7 +305,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L173",
       "id": "cli_summarize_logs",
-      "community": 4
+      "community": 7
     },
     {
       "label": "summarize_plugins_and_skills()",
@@ -193,7 +313,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L228",
       "id": "cli_summarize_plugins_and_skills",
-      "community": 2
+      "community": 1
     },
     {
       "label": "count_dirs()",
@@ -201,7 +321,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L242",
       "id": "cli_count_dirs",
-      "community": 2
+      "community": 1
     },
     {
       "label": "count_skill_files()",
@@ -209,7 +329,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L253",
       "id": "cli_count_skill_files",
-      "community": 2
+      "community": 1
     },
     {
       "label": "summarize_model_cache()",
@@ -217,7 +337,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L259",
       "id": "cli_summarize_model_cache",
-      "community": 1
+      "community": 6
     },
     {
       "label": "summarize_processes()",
@@ -225,7 +345,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L271",
       "id": "cli_summarize_processes",
-      "community": 1
+      "community": 8
     },
     {
       "label": "parse_int()",
@@ -233,7 +353,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L303",
       "id": "cli_parse_int",
-      "community": 1
+      "community": 8
     },
     {
       "label": "build_recommendations()",
@@ -241,7 +361,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L310",
       "id": "cli_build_recommendations",
-      "community": 1
+      "community": 6
     },
     {
       "label": "collect_report()",
@@ -249,7 +369,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L340",
       "id": "cli_collect_report",
-      "community": 1
+      "community": 6
     },
     {
       "label": "render_text()",
@@ -257,7 +377,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L368",
       "id": "cli_render_text",
-      "community": 5
+      "community": 1
     },
     {
       "label": "redact_report()",
@@ -265,7 +385,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L416",
       "id": "cli_redact_report",
-      "community": 3
+      "community": 5
     },
     {
       "label": "format_mapping()",
@@ -273,7 +393,7 @@
       "source_file": "src/codex_speed_doctor/cli.py",
       "source_location": "L439",
       "id": "cli_format_mapping",
-      "community": 5
+      "community": 1
     },
     {
       "label": "parse_args()",
@@ -290,9 +410,217 @@
       "source_location": "L469",
       "id": "cli_main",
       "community": 6
+    },
+    {
+      "label": "archive.py",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L1",
+      "id": "archive",
+      "community": 0
+    },
+    {
+      "label": "codex_processes_running()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L15",
+      "id": "archive_codex_processes_running",
+      "community": 0
+    },
+    {
+      "label": "write_status()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L30",
+      "id": "archive_write_status",
+      "community": 0
+    },
+    {
+      "label": "wait_for_codex_exit()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L45",
+      "id": "archive_wait_for_codex_exit",
+      "community": 0
+    },
+    {
+      "label": "sqlite_backup()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L59",
+      "id": "archive_sqlite_backup",
+      "community": 0
+    },
+    {
+      "label": "read_manifest()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L68",
+      "id": "archive_read_manifest",
+      "community": 0
+    },
+    {
+      "label": "write_restore_script()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L92",
+      "id": "archive_write_restore_script",
+      "community": 0
+    },
+    {
+      "label": "write_index()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L126",
+      "id": "archive_write_index",
+      "community": 0
+    },
+    {
+      "label": "archive()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L153",
+      "id": "archive_archive",
+      "community": 0
+    },
+    {
+      "label": "parse_args()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L250",
+      "id": "archive_parse_args",
+      "community": 0
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L259",
+      "id": "archive_main",
+      "community": 0
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "test_archive",
+      "_tgt": "test_archive_make_threads_db",
+      "source": "test_archive",
+      "target": "test_archive_make_threads_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_src": "test_archive",
+      "_tgt": "test_archive_make_archive_fixture",
+      "source": "test_archive",
+      "target": "test_archive_make_archive_fixture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_src": "test_archive",
+      "_tgt": "test_archive_archivetests",
+      "source": "test_archive",
+      "target": "test_archive_archivetests",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_src": "test_archive_make_archive_fixture",
+      "_tgt": "test_archive_make_threads_db",
+      "source": "test_archive_make_threads_db",
+      "target": "test_archive_make_archive_fixture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests_test_archive_moves_session_and_writes_restore_artifacts",
+      "_tgt": "test_archive_make_archive_fixture",
+      "source": "test_archive_make_archive_fixture",
+      "target": "test_archive_archivetests_test_archive_moves_session_and_writes_restore_artifacts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests_test_archive_skips_when_codex_is_running_without_wait",
+      "_tgt": "test_archive_make_archive_fixture",
+      "source": "test_archive_make_archive_fixture",
+      "target": "test_archive_archivetests_test_archive_skips_when_codex_is_running_without_wait",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests_test_defer_archive_dry_run_writes_queued_status_without_moving_session",
+      "_tgt": "test_archive_make_archive_fixture",
+      "source": "test_archive_make_archive_fixture",
+      "target": "test_archive_archivetests_test_defer_archive_dry_run_writes_queued_status_without_moving_session",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests",
+      "_tgt": "test_archive_archivetests_test_archive_moves_session_and_writes_restore_artifacts",
+      "source": "test_archive_archivetests",
+      "target": "test_archive_archivetests_test_archive_moves_session_and_writes_restore_artifacts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests",
+      "_tgt": "test_archive_archivetests_test_archive_skips_when_codex_is_running_without_wait",
+      "source": "test_archive_archivetests",
+      "target": "test_archive_archivetests_test_archive_skips_when_codex_is_running_without_wait",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_archive.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_src": "test_archive_archivetests",
+      "_tgt": "test_archive_archivetests_test_defer_archive_dry_run_writes_queued_status_without_moving_session",
+      "source": "test_archive_archivetests",
+      "target": "test_archive_archivetests_test_defer_archive_dry_run_writes_queued_status_without_moving_session",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -411,6 +739,162 @@
       "_tgt": "test_cli_clitests_test_redact_report_hides_local_path_and_session_filename",
       "source": "test_cli_clitests",
       "target": "test_cli_clitests_test_redact_report_hides_local_path_and_session_filename",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_validate_manifest",
+      "source": "defer_archive",
+      "target": "defer_archive_validate_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_build_archive_command",
+      "source": "defer_archive",
+      "target": "defer_archive_build_archive_command",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_launch_with_launchctl",
+      "source": "defer_archive",
+      "target": "defer_archive_launch_with_launchctl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_launch_with_terminal",
+      "source": "defer_archive",
+      "target": "defer_archive_launch_with_terminal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_defer",
+      "source": "defer_archive",
+      "target": "defer_archive_defer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_parse_args",
+      "source": "defer_archive",
+      "target": "defer_archive_parse_args",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_src": "defer_archive",
+      "_tgt": "defer_archive_main",
+      "source": "defer_archive",
+      "target": "defer_archive_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_src": "defer_archive_defer",
+      "_tgt": "defer_archive_validate_manifest",
+      "source": "defer_archive_validate_manifest",
+      "target": "defer_archive_defer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_src": "defer_archive_defer",
+      "_tgt": "defer_archive_build_archive_command",
+      "source": "defer_archive_build_archive_command",
+      "target": "defer_archive_defer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_src": "defer_archive_defer",
+      "_tgt": "defer_archive_launch_with_launchctl",
+      "source": "defer_archive_launch_with_launchctl",
+      "target": "defer_archive_defer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_src": "defer_archive_defer",
+      "_tgt": "defer_archive_launch_with_terminal",
+      "source": "defer_archive_launch_with_terminal",
+      "target": "defer_archive_defer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L155",
+      "weight": 1.0,
+      "_src": "defer_archive_main",
+      "_tgt": "defer_archive_defer",
+      "source": "defer_archive_defer",
+      "target": "defer_archive_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/defer_archive.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_src": "defer_archive_main",
+      "_tgt": "defer_archive_parse_args",
+      "source": "defer_archive_parse_args",
+      "target": "defer_archive_main",
       "confidence_score": 1.0
     },
     {
@@ -1131,6 +1615,270 @@
       "_tgt": "cli_parse_args",
       "source": "cli_parse_args",
       "target": "cli_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_codex_processes_running",
+      "source": "archive",
+      "target": "archive_codex_processes_running",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_write_status",
+      "source": "archive",
+      "target": "archive_write_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_wait_for_codex_exit",
+      "source": "archive",
+      "target": "archive_wait_for_codex_exit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_sqlite_backup",
+      "source": "archive",
+      "target": "archive_sqlite_backup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_read_manifest",
+      "source": "archive",
+      "target": "archive_read_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_write_restore_script",
+      "source": "archive",
+      "target": "archive_write_restore_script",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_write_index",
+      "source": "archive",
+      "target": "archive_write_index",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_archive",
+      "source": "archive",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L250",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_parse_args",
+      "source": "archive",
+      "target": "archive_parse_args",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L259",
+      "weight": 1.0,
+      "_src": "archive",
+      "_tgt": "archive_main",
+      "source": "archive",
+      "target": "archive_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "archive_wait_for_codex_exit",
+      "_tgt": "archive_codex_processes_running",
+      "source": "archive_codex_processes_running",
+      "target": "archive_wait_for_codex_exit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_codex_processes_running",
+      "source": "archive_codex_processes_running",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "archive_wait_for_codex_exit",
+      "_tgt": "archive_write_status",
+      "source": "archive_write_status",
+      "target": "archive_wait_for_codex_exit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_write_status",
+      "source": "archive_write_status",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L264",
+      "weight": 1.0,
+      "_src": "archive_main",
+      "_tgt": "archive_write_status",
+      "source": "archive_write_status",
+      "target": "archive_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_wait_for_codex_exit",
+      "source": "archive_wait_for_codex_exit",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_sqlite_backup",
+      "source": "archive_sqlite_backup",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_read_manifest",
+      "source": "archive_read_manifest",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_write_restore_script",
+      "source": "archive_write_restore_script",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L234",
+      "weight": 1.0,
+      "_src": "archive_archive",
+      "_tgt": "archive_write_index",
+      "source": "archive_write_index",
+      "target": "archive_archive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L262",
+      "weight": 1.0,
+      "_src": "archive_main",
+      "_tgt": "archive_archive",
+      "source": "archive_archive",
+      "target": "archive_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/codex_speed_doctor/archive.py",
+      "source_location": "L260",
+      "weight": 1.0,
+      "_src": "archive_main",
+      "_tgt": "archive_parse_args",
+      "source": "archive_parse_args",
+      "target": "archive_main",
       "confidence_score": 1.0
     }
   ],
