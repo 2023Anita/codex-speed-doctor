@@ -79,6 +79,58 @@ The default report is read-only and pseudonymous. It does not move sessions, del
 
 This tool intentionally stops at diagnosis. Cleanup should be a separate, explicit step after you have reviewed the report.
 
+## Deferred Archive
+
+v0.2 adds an explicit, backup-first archive workflow for oversized Codex session
+files. The default `codex-speed-doctor` command is still read-only; archive
+actions live behind separate commands.
+
+Create a manifest after you have written a handoff note:
+
+```jsonl
+{"slug":"long-running-task","handoff":"/Users/me/Documents/Codex/handoffs/2026-05-17-task.md","source":"/Users/me/.codex/sessions/2026/05/15/rollout-example.jsonl"}
+```
+
+From inside Codex, start a deferred archive job:
+
+```bash
+codex-speed-doctor-defer-archive --manifest "/absolute/path/manifest.jsonl"
+```
+
+It returns immediately with:
+
+```text
+job_id deferred-archive-...
+log_path /Users/me/.codex/archive_jobs/.../archive.log
+status_path /Users/me/.codex/archive_jobs/.../status.json
+```
+
+The background worker waits until Codex app-server processes exit, then runs the
+safe archive command. Check progress with:
+
+```bash
+cat "/path/to/status.json"
+tail -n 40 "/path/to/archive.log"
+```
+
+Status values:
+
+- `queued` / `launching`: the job was prepared.
+- `waiting`: the worker is waiting for Codex to exit.
+- `archiving`: backup and archive work is running.
+- `done`: archive completed and restore artifacts were written.
+- `failed` / `skipped`: read the log and status details.
+
+If Codex is already closed and you are in a normal Terminal, you can run the
+worker directly:
+
+```bash
+codex-speed-doctor-archive --manifest "/absolute/path/manifest.jsonl" --wait-for-codex-exit
+```
+
+The archive worker writes a `state_5.sqlite` backup, `moved-sessions.jsonl`,
+`restore-selected-sessions.py`, and `archive-index.md`.
+
 ## Safety Model
 
 ![Safety boundary](docs/assets/safety-boundary.png)
@@ -151,6 +203,12 @@ codex-speed-doctor --codex-home "/path/to/.codex"
 
 # Change the large-session threshold
 codex-speed-doctor --large-session-mb 100
+
+# Start a safe deferred archive job from inside Codex
+codex-speed-doctor-defer-archive --manifest "/absolute/path/manifest.jsonl"
+
+# Run the backup-first archive worker directly
+codex-speed-doctor-archive --manifest "/absolute/path/manifest.jsonl" --wait-for-codex-exit
 ```
 
 ## GitHub Pages
