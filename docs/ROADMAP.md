@@ -25,6 +25,15 @@
 - `launchctl` background execution with Terminal fallback on macOS
 - Restore script and archive index generation for selected sessions
 
+## v0.3 Updates
+
+- Active sessions above 50 MB are highlighted as priority handoff/archive candidates
+- `logs_2.sqlite` above 64 MB is reported as watch-worthy
+- `logs_2.sqlite` above 100 MB triggers a backup-first log-rotation recommendation
+- Deferred archive jobs remove their `launchctl` label after completion
+- Archive workers exit cleanly when an existing status file already says `done`
+- Troubleshooting docs now explain `waiting` as a live Codex app-server blocker state
+
 ## Non-Goals
 
 - Reading credential files

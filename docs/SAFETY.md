@@ -49,6 +49,17 @@ The default `codex-speed-doctor` diagnostic command does not:
 
 Those actions can be useful, but they should be done by a separate backup-first maintenance workflow after the user reviews the report.
 
+## Thresholds Are Review Prompts
+
+Codex Speed Doctor now reports practical maintenance thresholds:
+
+- active sessions above 50 MB are priority handoff/archive candidates
+- `logs_2.sqlite` above 64 MB is watch-worthy
+- `logs_2.sqlite` above 100 MB should trigger a backup-first rotation plan
+
+These thresholds do not grant permission to mutate local state. They only make
+the next safe human decision clearer.
+
 ## Explicit Archive Commands
 
 Archive support is intentionally separate from the read-only diagnostic command.
@@ -63,6 +74,10 @@ backs up `state_5.sqlite`, moves selected session files into `archived_sessions`
 updates the selected thread records, and writes restore artifacts. It does not
 delete sessions permanently.
 
+Deferred archive jobs are designed to avoid repeated execution after completion:
+the launchd label is removed when the worker exits, and a worker that sees an
+existing `done` status exits without moving files again.
+
 ## Recommended Manual Fix Order
 
 1. Create handoff notes for important giant active sessions.
@@ -70,5 +85,7 @@ delete sessions permanently.
 3. Archive only the sessions you no longer need in the hot path.
 4. Back up plugin and skill folders before moving suspicious items.
 5. Back up `models_cache.json` before forcing Codex to rebuild it.
+6. Rotate logs only after Codex is closed, and move `logs_2.sqlite`,
+   `logs_2.sqlite-wal`, and `logs_2.sqlite-shm` together.
 
 Never run a mutating cleanup while Codex is actively writing local state.

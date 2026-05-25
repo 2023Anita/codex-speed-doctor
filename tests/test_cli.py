@@ -62,7 +62,9 @@ class CliTests(unittest.TestCase):
             self.assertEqual(report.sessions.large_active_sessions[0].name, "rollout-test.jsonl")
             self.assertIn("codex_core_skills::loader", report.logs.warning_targets)
             self.assertEqual(report.plugins_and_skills.skill_count, 1)
-            self.assertTrue(any("Large active sessions" in item for item in report.recommendations))
+            self.assertTrue(
+                any("above 50 MB" in item for item in report.recommendations)
+            )
 
     def test_render_text_hides_session_filename_by_default(self) -> None:
         with TemporaryDirectory() as tmp:
@@ -78,6 +80,7 @@ class CliTests(unittest.TestCase):
 
             self.assertNotIn("private-rollout.jsonl", text)
             self.assertIn("session_001", text)
+            self.assertIn("large_session_threshold_mb: 50", text)
 
     def test_redact_report_hides_local_path_and_session_filename(self) -> None:
         with TemporaryDirectory() as tmp:
@@ -92,6 +95,24 @@ class CliTests(unittest.TestCase):
 
             self.assertEqual(report.codex_home, "~/.codex")
             self.assertEqual(report.sessions.large_active_sessions[0].name, "session_001")
+
+    def test_logs_above_cleanup_threshold_get_backup_first_recommendation(self) -> None:
+        with TemporaryDirectory() as tmp:
+            codex_home = Path(tmp) / ".codex"
+            codex_home.mkdir(parents=True)
+            make_logs_db(codex_home / "logs_2.sqlite")
+            wal_path = codex_home / "logs_2.sqlite-wal"
+            wal_path.write_bytes(b"")
+            with wal_path.open("r+b") as handle:
+                handle.truncate(101 * 1024 * 1024)
+
+            report = collect_report(codex_home, large_session_mb=50)
+            text = render_text(report, details=False)
+
+            self.assertIn("log_cleanup_mb: 100", text)
+            self.assertTrue(
+                any("backup-first log rotation" in item for item in report.recommendations)
+            )
 
 
 if __name__ == "__main__":

@@ -42,6 +42,18 @@ def write_status(status_file: str | None, state: str, **details: object) -> None
     tmp.replace(path)
 
 
+def read_status(status_file: str | None) -> dict[str, object] | None:
+    if not status_file:
+        return None
+    path = Path(status_file).expanduser().resolve()
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
 def wait_for_codex_exit(status_file: str | None = None) -> None:
     last_log = 0.0
     while codex_processes_running():
@@ -154,6 +166,11 @@ def archive(args: argparse.Namespace) -> int:
     codex_home = Path(args.codex_home).expanduser().resolve()
     sessions_root = codex_home / "sessions"
     state_db = codex_home / "state_5.sqlite"
+    existing_status = read_status(args.status_file)
+    if existing_status and existing_status.get("state") == "done":
+        print("archive_already_done")
+        return 0
+
     if args.wait_for_codex_exit:
         wait_for_codex_exit(args.status_file)
     elif codex_processes_running():

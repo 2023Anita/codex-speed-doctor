@@ -536,11 +536,11 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           <div class="metric-grid">
             <div class="metric">
               <strong data-i18n="metricSessionsTitle">Sessions</strong>
-              <p data-i18n="metricSessionsBody">标记需要先写 handoff 再归档的大 active session。</p>
+              <p data-i18n="metricSessionsBody">标记 50 MB 以上、需要先写 handoff 再归档的大 active session。</p>
             </div>
             <div class="metric">
               <strong data-i18n="metricLogsTitle">Logs</strong>
-              <p data-i18n="metricLogsBody">汇总日志大小和 warning target，不打印私人日志正文。</p>
+              <p data-i18n="metricLogsBody">汇总日志大小和 warning target；64 MB 开始观察，100 MB 建议备份后轮转。</p>
             </div>
             <div class="metric">
               <strong data-i18n="metricPluginsTitle">Plugins and Skills</strong>
@@ -682,9 +682,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           mapTitle: "本地状态地图",
           mapCopy: "Codex 启动变慢可能来自多个本地因素。工具把这些检查拆开，避免把日志问题误判成 session 问题，也避免把插件 warning 误判成模型问题。",
           metricSessionsTitle: "Sessions",
-          metricSessionsBody: "标记需要先写 handoff 再归档的大 active session。",
+          metricSessionsBody: "标记 50 MB 以上、需要先写 handoff 再归档的大 active session。",
           metricLogsTitle: "Logs",
-          metricLogsBody: "汇总日志大小和 warning target，不打印私人日志正文。",
+          metricLogsBody: "汇总日志大小和 warning target；64 MB 开始观察，100 MB 建议备份后轮转。",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "统计本地加载面，并突出插件与 Skill 的 warning 模式。",
           mapAlt: "Codex 本地状态模块的临床诊断地图",
@@ -741,9 +741,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           mapTitle: "Local State Map",
           mapCopy: "Codex startup can feel slow for several local reasons. The tool keeps those checks separate so a log issue is not mistaken for a session issue, and a plugin warning is not mistaken for a model issue.",
           metricSessionsTitle: "Sessions",
-          metricSessionsBody: "Flags large active sessions that should get handoff notes before archival.",
+          metricSessionsBody: "Flags active sessions above 50 MB for handoff-first archive review.",
           metricLogsTitle: "Logs",
-          metricLogsBody: "Summarizes log size and warning targets without printing private log bodies.",
+          metricLogsBody: "Summarizes log size and warning targets; 64 MB is watch-worthy and 100 MB calls for backup-first rotation.",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "Counts local loading surface and highlights warning patterns.",
           mapAlt: "A clinical diagnostic map of Codex local state modules",
@@ -800,9 +800,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           mapTitle: "ローカル状態マップ",
           mapCopy: "Codex の起動遅延には複数のローカル要因があります。このツールはチェックを分離し、ログ問題を session 問題、プラグイン warning をモデル問題と誤解しないようにします。",
           metricSessionsTitle: "Sessions",
-          metricSessionsBody: "アーカイブ前に handoff が必要な大きな active session を検出します。",
+          metricSessionsBody: "50 MB を超える active session を handoff-first のアーカイブ候補として検出します。",
           metricLogsTitle: "Logs",
-          metricLogsBody: "ログ本文を出さずに、サイズと warning target を集計します。",
+          metricLogsBody: "ログサイズと warning target を集計します。64 MB は監視、100 MB はバックアップ後のローテーション候補です。",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "ローカルの読み込み面を数え、プラグインと Skill の warning パターンを示します。",
           mapAlt: "Codex のローカル状態モジュールを示す臨床診断風マップ",
@@ -859,9 +859,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           mapTitle: "로컬 상태 지도",
           mapCopy: "Codex 시작 지연은 여러 로컬 요인에서 올 수 있습니다. 이 도구는 검사를 분리해 로그 문제를 session 문제로, 플러그인 warning을 모델 문제로 오해하지 않게 합니다.",
           metricSessionsTitle: "Sessions",
-          metricSessionsBody: "아카이브 전에 handoff가 필요한 큰 active session을 표시합니다.",
+          metricSessionsBody: "50 MB를 넘는 active session을 handoff-first 아카이브 검토 대상으로 표시합니다.",
           metricLogsTitle: "Logs",
-          metricLogsBody: "개인 로그 본문을 출력하지 않고 로그 크기와 warning target을 요약합니다.",
+          metricLogsBody: "로그 크기와 warning target을 요약합니다. 64 MB부터 관찰하고 100 MB부터 백업 후 회전을 검토합니다.",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "로컬 로딩 범위를 계산하고 플러그인과 Skill warning 패턴을 강조합니다.",
           mapAlt: "Codex 로컬 상태 모듈의 임상 진단식 지도",
