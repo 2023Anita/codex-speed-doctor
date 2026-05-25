@@ -200,6 +200,7 @@
 
       .status-grid,
       .metric-grid,
+      .audience-grid,
       .safety-grid {
         display: grid;
         gap: 16px;
@@ -211,6 +212,7 @@
 
       .stat,
       .metric,
+      .audience-card,
       .step,
       .safety-item,
       .command-panel,
@@ -223,6 +225,7 @@
 
       .stat,
       .metric,
+      .audience-card,
       .step,
       .safety-item {
         padding: 22px;
@@ -235,6 +238,7 @@
       }
 
       .metric strong,
+      .audience-card strong,
       .step strong,
       .safety-item strong {
         display: block;
@@ -244,6 +248,7 @@
 
       .stat span,
       .metric p,
+      .audience-card p,
       .step p,
       .safety-item p,
       .caption,
@@ -253,6 +258,7 @@
       }
 
       .metric p,
+      .audience-card p,
       .step p,
       .safety-item p {
         margin: 0;
@@ -325,6 +331,10 @@
 
       .metric-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .audience-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .image-frame {
@@ -415,6 +425,7 @@
 
         .status-grid,
         .metric-grid,
+        .audience-grid,
         .workflow-grid,
         .safety-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -445,6 +456,7 @@
 
         .status-grid,
         .metric-grid,
+        .audience-grid,
         .workflow-grid,
         .safety-grid {
           grid-template-columns: 1fr;
@@ -496,6 +508,60 @@
             <div class="stat">
               <strong data-i18n="statBackupTitle">备份意识</strong>
               <span data-i18n="statBackupBody">清理动作放到单独确认过的维护步骤里。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="audienceTitle">给谁用，解决什么</h2>
+            <p class="section-copy" data-i18n="audienceCopy">
+              可以把它理解成 Codex 的本地体检报告。它不诊断患者，也不读取医学资料；它只检查你的 Codex 本地状态，帮你判断为什么工具变慢，以及下一步怎样处理更安全。
+            </p>
+          </div>
+          <div class="audience-grid">
+            <div class="audience-card">
+              <strong data-i18n="audienceMedicalTitle">医疗与科研人员</strong>
+              <p data-i18n="audienceMedicalBody">当 Codex 用来写综述、做数据分析、整理课程或长期项目时，大会话很有价值。工具帮你先保留交接说明，再把不常用的大文件移出启动热路径。</p>
+            </div>
+            <div class="audience-card">
+              <strong data-i18n="audienceBeginnerTitle">刚开始用 Codex 的小白</strong>
+              <p data-i18n="audienceBeginnerBody">不用先理解数据库、日志或插件缓存。报告会把问题拆成 sessions、logs、plugins、skills、cache 和进程，并给出可读建议。</p>
+            </div>
+            <div class="audience-card">
+              <strong data-i18n="audienceMaintainerTitle">工具维护者</strong>
+              <p data-i18n="audienceMaintainerBody">适合在清理前做一次只读盘点，确认是大 session、日志膨胀、Skill warning，还是 app-server 进程仍在阻塞。</p>
+            </div>
+            <div class="audience-card">
+              <strong data-i18n="audienceSafetyTitle">重视安全边界的人</strong>
+              <p data-i18n="audienceSafetyBody">默认不删除、不归档、不改配置、不读取凭证。阈值只提醒你该复查，不代表自动清理。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="plainTitle">用普通话说，它在查什么</h2>
+            <p class="section-copy" data-i18n="plainCopy">
+              如果 Codex 像一间工作室，Speed Doctor 会先看桌面上是不是摊着太多大项目，日志本是不是太厚，工具箱有没有坏工具，而不是直接把东西扔掉。
+            </p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong data-i18n="plainSlowTitle">打开慢</strong>
+              <p data-i18n="plainSlowBody">检查是否有超过 50 MB 的 active session 还留在启动路径里。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="plainLogTitle">日志变大</strong>
+              <p data-i18n="plainLogBody">64 MB 开始提醒观察，100 MB 建议关闭 Codex 后备份轮转。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="plainToolTitle">插件或 Skill 报 warning</strong>
+              <p data-i18n="plainToolBody">先定位 warning 来源，再决定是否移动某个插件或 Skill。</p>
             </div>
           </div>
         </div>
@@ -677,6 +743,24 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           statHandoffBody: "归档前先让长对话可继续接上。",
           statBackupTitle: "备份意识",
           statBackupBody: "清理动作放到单独确认过的维护步骤里。",
+          audienceTitle: "给谁用，解决什么",
+          audienceCopy: "可以把它理解成 Codex 的本地体检报告。它不诊断患者，也不读取医学资料；它只检查你的 Codex 本地状态，帮你判断为什么工具变慢，以及下一步怎样处理更安全。",
+          audienceMedicalTitle: "医疗与科研人员",
+          audienceMedicalBody: "当 Codex 用来写综述、做数据分析、整理课程或长期项目时，大会话很有价值。工具帮你先保留交接说明，再把不常用的大文件移出启动热路径。",
+          audienceBeginnerTitle: "刚开始用 Codex 的小白",
+          audienceBeginnerBody: "不用先理解数据库、日志或插件缓存。报告会把问题拆成 sessions、logs、plugins、skills、cache 和进程，并给出可读建议。",
+          audienceMaintainerTitle: "工具维护者",
+          audienceMaintainerBody: "适合在清理前做一次只读盘点，确认是大 session、日志膨胀、Skill warning，还是 app-server 进程仍在阻塞。",
+          audienceSafetyTitle: "重视安全边界的人",
+          audienceSafetyBody: "默认不删除、不归档、不改配置、不读取凭证。阈值只提醒你该复查，不代表自动清理。",
+          plainTitle: "用普通话说，它在查什么",
+          plainCopy: "如果 Codex 像一间工作室，Speed Doctor 会先看桌面上是不是摊着太多大项目，日志本是不是太厚，工具箱有没有坏工具，而不是直接把东西扔掉。",
+          plainSlowTitle: "打开慢",
+          plainSlowBody: "检查是否有超过 50 MB 的 active session 还留在启动路径里。",
+          plainLogTitle: "日志变大",
+          plainLogBody: "64 MB 开始提醒观察，100 MB 建议关闭 Codex 后备份轮转。",
+          plainToolTitle: "插件或 Skill 报 warning",
+          plainToolBody: "先定位 warning 来源，再决定是否移动某个插件或 Skill。",
           commandTitle: "一条命令先体检",
           commandCopy: "先在本地运行报告。第一次输出应该解释问题形状，再决定是否归档、恢复、移动插件或重建缓存。",
           mapTitle: "本地状态地图",
@@ -736,6 +820,24 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           statHandoffBody: "Keep long-running work resumable before archiving sessions.",
           statBackupTitle: "Backup-aware",
           statBackupBody: "Cleanup belongs in a separate reviewed maintenance step.",
+          audienceTitle: "Who it helps",
+          audienceCopy: "Think of it as a local check-up for Codex. It does not diagnose patients or read medical files; it checks local Codex state so you can see why the tool feels slow and what to do next safely.",
+          audienceMedicalTitle: "Clinicians and researchers",
+          audienceMedicalBody: "When Codex supports reviews, data analysis, teaching material, or long-running projects, large chats are valuable. The tool helps preserve handoffs before moving inactive giants out of the startup path.",
+          audienceBeginnerTitle: "New Codex users",
+          audienceBeginnerBody: "You do not need to understand databases, logs, or plugin caches first. The report splits the problem into sessions, logs, plugins, skills, cache, and processes with readable recommendations.",
+          audienceMaintainerTitle: "Tool maintainers",
+          audienceMaintainerBody: "Use it for a read-only inventory before cleanup, separating large sessions, log growth, Skill warnings, and app-server blockers.",
+          audienceSafetyTitle: "Safety-conscious users",
+          audienceSafetyBody: "By default it does not delete, archive, rewrite config, or read credentials. Thresholds are review prompts, not automatic cleanup permission.",
+          plainTitle: "What it checks, simply",
+          plainCopy: "If Codex is a workspace, Speed Doctor checks whether too many large projects are open, the logbook is too thick, or a tool is warning in the background before anything is thrown away.",
+          plainSlowTitle: "Slow to open",
+          plainSlowBody: "Checks whether active sessions above 50 MB are still in the startup path.",
+          plainLogTitle: "Logs are growing",
+          plainLogBody: "64 MB becomes watch-worthy; 100 MB calls for backup-first rotation after Codex is closed.",
+          plainToolTitle: "Plugin or Skill warnings",
+          plainToolBody: "Find the warning source first, then decide whether a plugin or Skill should be moved.",
           commandTitle: "Start With One Command",
           commandCopy: "Run the report locally. The first pass should explain the shape of the problem before any archive, restore, plugin move, or cache rebuild.",
           mapTitle: "Local State Map",
@@ -795,6 +897,24 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           statHandoffBody: "アーカイブ前に長い会話を再開できる状態にします。",
           statBackupTitle: "バックアップ前提",
           statBackupBody: "整理作業は確認済みの保守ステップに分離します。",
+          audienceTitle: "誰の何を助けるか",
+          audienceCopy: "Codex のローカル健康診断のようなものです。患者や医療ファイルを診断せず、Codex のローカル状態だけを確認し、なぜ遅いかと次に安全に何をするかを示します。",
+          audienceMedicalTitle: "医療者・研究者",
+          audienceMedicalBody: "レビュー、データ分析、教材作成、長期プロジェクトで Codex を使う場合、大きな会話は価値があります。非アクティブな巨大 session を移す前に handoff を残せます。",
+          audienceBeginnerTitle: "Codex 初心者",
+          audienceBeginnerBody: "データベース、ログ、プラグインキャッシュを先に理解する必要はありません。レポートが sessions、logs、plugins、skills、cache、processes に分けて説明します。",
+          audienceMaintainerTitle: "ツール保守者",
+          audienceMaintainerBody: "整理前の読み取り専用棚卸しとして、大きな session、ログ肥大、Skill warning、app-server のブロックを切り分けます。",
+          audienceSafetyTitle: "安全境界を重視する人",
+          audienceSafetyBody: "既定では削除、アーカイブ、設定変更、認証情報読み取りを行いません。しきい値は確認の合図であり、自動清掃の許可ではありません。",
+          plainTitle: "簡単に言うと何を見るか",
+          plainCopy: "Codex を作業部屋にたとえるなら、Speed Doctor は大きな案件を開きすぎていないか、ログ帳が厚すぎないか、工具が裏で警告していないかを先に見ます。",
+          plainSlowTitle: "起動が遅い",
+          plainSlowBody: "50 MB を超える active session が起動経路に残っていないか確認します。",
+          plainLogTitle: "ログが大きい",
+          plainLogBody: "64 MB で監視、100 MB で Codex 終了後のバックアップ優先ローテーションを検討します。",
+          plainToolTitle: "Plugin や Skill の warning",
+          plainToolBody: "まず warning の出所を特定し、移動するかどうかを判断します。",
           commandTitle: "まず 1 コマンドで診断",
           commandCopy: "ローカルでレポートを実行します。最初の出力で問題の形を把握してから、アーカイブ、復元、プラグイン移動、キャッシュ再作成を判断します。",
           mapTitle: "ローカル状態マップ",
@@ -854,6 +974,24 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           statHandoffBody: "아카이브 전에 긴 대화를 이어갈 수 있게 만듭니다.",
           statBackupTitle: "백업 인식",
           statBackupBody: "정리 작업은 별도로 검토된 유지보수 단계에 둡니다.",
+          audienceTitle: "누구에게 도움이 되나",
+          audienceCopy: "Codex의 로컬 건강검진처럼 생각하면 됩니다. 환자나 의료 파일을 진단하지 않고, 로컬 Codex 상태만 확인해 왜 느린지와 다음 안전한 조치를 알려줍니다.",
+          audienceMedicalTitle: "의료인과 연구자",
+          audienceMedicalBody: "문헌 리뷰, 데이터 분석, 교육 자료, 장기 프로젝트에 Codex를 쓰면 큰 대화도 가치가 있습니다. 비활성 대형 session을 옮기기 전에 handoff를 남기도록 돕습니다.",
+          audienceBeginnerTitle: "Codex 초보자",
+          audienceBeginnerBody: "데이터베이스, 로그, 플러그인 캐시를 먼저 이해할 필요가 없습니다. 보고서가 sessions, logs, plugins, skills, cache, processes로 나누어 설명합니다.",
+          audienceMaintainerTitle: "도구 유지보수자",
+          audienceMaintainerBody: "정리 전에 읽기 전용 점검으로 큰 session, 로그 증가, Skill warning, app-server 차단을 구분할 수 있습니다.",
+          audienceSafetyTitle: "안전 경계를 중시하는 사용자",
+          audienceSafetyBody: "기본적으로 삭제, 아카이브, 설정 변경, 인증 정보 읽기를 하지 않습니다. 임계값은 검토 신호일 뿐 자동 정리 권한이 아닙니다.",
+          plainTitle: "쉽게 말해 무엇을 보나",
+          plainCopy: "Codex가 작업실이라면 Speed Doctor는 큰 프로젝트를 너무 많이 열어두었는지, 로그북이 너무 두꺼운지, 도구가 뒤에서 경고하는지 먼저 확인합니다.",
+          plainSlowTitle: "열리는 속도가 느림",
+          plainSlowBody: "50 MB를 넘는 active session이 시작 경로에 남아 있는지 확인합니다.",
+          plainLogTitle: "로그가 커짐",
+          plainLogBody: "64 MB부터 관찰하고 100 MB부터 Codex 종료 후 백업 우선 회전을 검토합니다.",
+          plainToolTitle: "Plugin 또는 Skill warning",
+          plainToolBody: "먼저 warning 출처를 찾고 플러그인이나 Skill을 이동할지 결정합니다.",
           commandTitle: "먼저 한 줄 명령으로 진단",
           commandCopy: "로컬에서 보고서를 실행합니다. 첫 출력으로 문제의 형태를 파악한 뒤 아카이브, 복원, 플러그인 이동, 캐시 재생성을 결정합니다.",
           mapTitle: "로컬 상태 지도",

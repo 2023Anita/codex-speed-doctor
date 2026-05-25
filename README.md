@@ -1,6 +1,6 @@
 # Codex Speed Doctor
 
-> Find why Codex feels slow before you clean anything.
+> A local check-up for slow Codex. Find the cause before you clean anything.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2563eb)](pyproject.toml)
 [![MIT License](https://img.shields.io/badge/license-MIT-16a34a)](LICENSE)
@@ -15,6 +15,13 @@ The GitHub Pages page supports instant in-page switching between Chinese, Englis
 
 **中文**：Codex Speed Doctor 是一个本地优先、默认只读的诊断工具，用来判断 Codex Desktop 或 CLI 为什么变慢：是 active session 太大、日志膨胀、插件/Skill warning、model cache 异常，还是本地进程状态不对。
 
+如果你不是工程师，也可以把它理解成 **Codex 的体检报告**：
+
+- 不上来就“清理垃圾”，先看哪里真的异常。
+- 不读取你的密钥、账号、Cookie 或私人项目内容。
+- 不默认删除文件、不移动会话、不修改配置。
+- 把技术问题翻译成下一步可执行建议，例如“先写交接说明，再归档超大的旧对话”。
+
 ## English
 
 **English**: Codex Speed Doctor is a local-first, read-only diagnostic tool for slow Codex Desktop or CLI startup. It checks oversized active sessions, large logs, plugin or skill warnings, model cache state, and local process pressure before you touch anything.
@@ -28,6 +35,47 @@ The GitHub Pages page supports instant in-page switching between Chinese, Englis
 **한국어**: Codex Speed Doctor는 Codex Desktop 또는 CLI 시작이 느린 원인을 확인하는 로컬 우선, 기본 읽기 전용 진단 도구입니다. 큰 active session, 커진 로그, plugin/Skill warning, model cache 상태, 로컬 프로세스 압력을 점검합니다.
 
 ![Codex Speed Doctor hero](docs/assets/hero-codex-diagnostic.png)
+
+## Who This Is For
+
+Codex Speed Doctor is useful when:
+
+- You use Codex for clinical research, medical writing, literature review,
+  data analysis, teaching materials, or long-running AI projects.
+- Codex starts slowly, gets stuck while loading models, or feels heavier after
+  many long conversations.
+- You want to clean local Codex state safely but do not want to accidentally
+  delete useful chat history.
+- You need a simple handoff-first workflow so important work can be resumed
+  from a short note even after old giant sessions are archived.
+
+For medical and non-technical users: this tool does **not** diagnose patients or
+medical data. It diagnoses the local Codex app state on your computer, much like
+checking whether a workstation is slow because the logbook is huge, too many old
+cases are open, or a plugin keeps warning in the background.
+
+## In Plain Language
+
+| If Codex feels... | This tool checks... | What you learn |
+| --- | --- | --- |
+| Slow to open | Whether too many large active conversations are still in the startup path | Which old conversations should get handoff notes before archiving |
+| Stuck around model loading | Whether logs mention model, auth, timeout, or network events | Whether this looks like a local cache/process issue or something outside sessions |
+| Noisy after adding tools | Whether plugins or Skills are producing loader warnings | Which area to inspect before disabling anything |
+| Hard to clean safely | Whether logs or sessions crossed conservative review thresholds | What to back up first and what not to touch while Codex is running |
+
+## Why It Matters
+
+Long Codex conversations are valuable, especially in research and clinical
+workflow building. But very large active sessions can make the app heavier to
+resume. Codex Speed Doctor helps separate **memory worth keeping** from **local
+state that should leave the hot path**.
+
+The value is not automatic cleanup. The value is safer decision-making:
+
+1. See the local bottleneck.
+2. Preserve important context in a handoff note.
+3. Archive only what you explicitly selected.
+4. Keep restore artifacts so a mistaken archive can be reversed.
 
 ## Quick Start
 
