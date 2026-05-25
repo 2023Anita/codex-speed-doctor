@@ -56,6 +56,16 @@ def build_archive_command(
 def launch_with_launchctl(label: str, command: list[str], log_path: Path) -> None:
     if platform.system() != "Darwin" or shutil.which("launchctl") is None:
         raise RuntimeError("launchctl is only available on macOS")
+    # `launchctl submit` can leave a labelled job around after the worker exits
+    # on some Codex Desktop runs. Wrap the worker so the label is removed after
+    # completion; otherwise a finished archive can be re-run and overwrite the
+    # status file with another `waiting` state.
+    shell_command = (
+        f"{shlex.join(command)}; "
+        "exit_code=$?; "
+        f"launchctl remove {shlex.quote(label)} >/dev/null 2>&1 || true; "
+        "exit $exit_code"
+    )
     subprocess.run(
         [
             "launchctl",
@@ -67,7 +77,9 @@ def launch_with_launchctl(label: str, command: list[str], log_path: Path) -> Non
             "-e",
             str(log_path),
             "--",
-            *command,
+            "/bin/zsh",
+            "-lc",
+            shell_command,
         ],
         check=True,
     )

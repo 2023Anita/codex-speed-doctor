@@ -14,6 +14,8 @@ from typing import Iterable
 
 
 DEFAULT_LARGE_SESSION_MB = 50
+LOG_WATCH_MB = 64
+LOG_CLEANUP_MB = 100
 
 
 @dataclass(frozen=True)
@@ -310,12 +312,17 @@ def parse_int(value: str) -> int:
 def build_recommendations(report: Report) -> list[str]:
     recommendations: list[str] = []
     if report.sessions.large_active_sessions:
+        count = len(report.sessions.large_active_sessions)
         recommendations.append(
-            "Large active sessions are present. Create handoff notes for important threads, then archive the huge active sessions."
+            f"{count} active session(s) are above {DEFAULT_LARGE_SESSION_MB} MB. Treat them as priority handoff/archive candidates: create handoffs first, then archive only after confirmation."
         )
-    if report.logs.logs_mb >= 64:
+    if report.logs.logs_mb >= LOG_CLEANUP_MB:
         recommendations.append(
-            "logs_2.sqlite is above 64 MB. Rotate or archive logs after closing Codex and backing up local state."
+            f"logs_2.sqlite is above {LOG_CLEANUP_MB} MB. Plan backup-first log rotation after closing Codex; do not delete logs in place."
+        )
+    elif report.logs.logs_mb >= LOG_WATCH_MB:
+        recommendations.append(
+            f"logs_2.sqlite is above {LOG_WATCH_MB} MB. Watch growth and rotate logs later with a backup-first workflow."
         )
     warning_targets = report.logs.warning_targets
     if any("skill" in target.lower() for target in warning_targets):
@@ -377,6 +384,7 @@ def render_text(report: Report, details: bool) -> str:
     lines.append(f"- active_threads: {report.sessions.active_threads}")
     lines.append(f"- archived_threads: {report.sessions.archived_threads}")
     lines.append(f"- active_sessions_gb: {report.sessions.active_sessions_gb}")
+    lines.append(f"- large_session_threshold_mb: {DEFAULT_LARGE_SESSION_MB}")
     if report.sessions.large_active_sessions:
         lines.append("- large_active_sessions:")
         for index, item in enumerate(report.sessions.large_active_sessions, start=1):
@@ -387,6 +395,8 @@ def render_text(report: Report, details: bool) -> str:
     lines.append("")
     lines.append("Logs")
     lines.append(f"- logs_mb: {report.logs.logs_mb}")
+    lines.append(f"- log_watch_mb: {LOG_WATCH_MB}")
+    lines.append(f"- log_cleanup_mb: {LOG_CLEANUP_MB}")
     lines.append(f"- level_counts: {format_mapping(report.logs.level_counts)}")
     lines.append(f"- warning_targets: {format_mapping(report.logs.warning_targets)}")
     lines.append(f"- model_auth_network_events: {report.logs.model_related_events}")

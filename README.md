@@ -54,6 +54,20 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json
 
 The default report is read-only and pseudonymous. It does not move sessions, delete files, rewrite config, or print raw local session paths.
 
+## Practical Thresholds
+
+The project uses conservative maintenance thresholds learned from real Codex
+Desktop cleanup runs:
+
+- Active sessions above **50 MB** are treated as priority handoff/archive
+  candidates. They are not archived automatically.
+- `logs_2.sqlite` above **64 MB** is watch-worthy.
+- `logs_2.sqlite` above **100 MB** should trigger a backup-first log rotation
+  plan after Codex is closed.
+
+These thresholds are prompts for review, not automatic cleanup rules. The safe
+sequence is still diagnose, write handoffs, confirm, then archive or rotate.
+
 ## What It Diagnoses
 
 ![Local state map](docs/assets/local-state-map.png)
@@ -121,6 +135,12 @@ Status values:
 - `done`: archive completed and restore artifacts were written.
 - `failed` / `skipped`: read the log and status details.
 
+If a job remains in `waiting`, Codex app-server processes are still alive. Quit
+Codex fully, check the status from a normal Terminal, and reopen Codex only
+after the status is `done` or `failed`. Newer deferred jobs remove their
+`launchctl` label after completion, and the archive worker is idempotent when a
+status file already says `done`.
+
 If Codex is already closed and you are in a normal Terminal, you can run the
 worker directly:
 
@@ -160,12 +180,15 @@ Sessions
 - active_threads: 94
 - archived_threads: 159
 - active_sessions_gb: 1.836
+- large_session_threshold_mb: 50
 - large_active_sessions:
   - session_001: 638.0 MB
   - session_002: 484.0 MB
 
 Logs
 - logs_mb: 88.9
+- log_watch_mb: 64
+- log_cleanup_mb: 100
 - level_counts: INFO=561, TRACE=1287, WARN=84
 - warning_targets: codex_core_plugins::manifest=20, codex_core_skills::loader=64
 - model_auth_network_events: 12
@@ -182,7 +205,7 @@ Model Cache
 - age_hours: 7.4
 
 Recommendations
-- Large active sessions are present. Create handoff notes for important threads, then archive the huge active sessions.
+- 2 active session(s) are above 50 MB. Treat them as priority handoff/archive candidates: create handoffs first, then archive only after confirmation.
 - Skill loader warnings detected. Inspect the affected SKILL.md files before disabling anything.
 ```
 

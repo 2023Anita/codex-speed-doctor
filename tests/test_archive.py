@@ -102,6 +102,26 @@ class ArchiveTests(unittest.TestCase):
             self.assertEqual(status["state"], "skipped")
             self.assertEqual(status["reason"], "codex_running")
 
+    def test_archive_done_status_is_idempotent(self) -> None:
+        with TemporaryDirectory() as tmp:
+            codex_home, session_file, _handoff, manifest, status_file = make_archive_fixture(tmp)
+            status_file.write_text(
+                json.dumps({"state": "done", "archive_root": "/already/done"}) + "\n",
+                encoding="utf-8",
+            )
+            args = argparse.Namespace(
+                manifest=str(manifest),
+                codex_home=str(codex_home),
+                wait_for_codex_exit=True,
+                status_file=str(status_file),
+            )
+            with mock.patch.object(archive, "wait_for_codex_exit") as wait_mock:
+                rc = archive.archive(args)
+
+            self.assertEqual(rc, 0)
+            self.assertTrue(session_file.exists())
+            wait_mock.assert_not_called()
+
     def test_defer_archive_dry_run_writes_queued_status_without_moving_session(self) -> None:
         with TemporaryDirectory() as tmp:
             codex_home, session_file, _handoff, manifest, _status_file = make_archive_fixture(tmp)
