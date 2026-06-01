@@ -85,7 +85,17 @@ existing `done` status exits without moving files again.
 3. Archive only the sessions you no longer need in the hot path.
 4. Back up plugin and skill folders before moving suspicious items.
 5. Back up `models_cache.json` before forcing Codex to rebuild it.
-6. Rotate logs only after Codex is closed, and move `logs_2.sqlite`,
-   `logs_2.sqlite-wal`, and `logs_2.sqlite-shm` together.
+6. Rotate logs only after Codex is closed, and move
+   `~/.codex/logs_2.sqlite`, `~/.codex/logs_2.sqlite-wal`, and
+   `~/.codex/logs_2.sqlite-shm` together.
 
 Never run a mutating cleanup while Codex is actively writing local state.
+
+When a deferred job remains in `waiting`, inspect blockers before taking action:
+
+```bash
+ps -axo pid=,comm=,args= | rg -i "codex|openai.codex|app-server|crashpad"
+```
+
+Only stop stale Codex processes from a normal Terminal after the user has closed
+Codex. Do not start repeated kill loops from inside an active Codex session.

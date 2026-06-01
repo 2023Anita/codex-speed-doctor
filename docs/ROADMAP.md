@@ -33,6 +33,10 @@
 - Deferred archive jobs remove their `launchctl` label after completion
 - Archive workers exit cleanly when an existing status file already says `done`
 - Troubleshooting docs now explain `waiting` as a live Codex app-server blocker state
+- Troubleshooting docs now include Terminal-first blocker inspection and stale
+  process cleanup for Codex Desktop, app-server, and crashpad helper blockers
+- Log rotation guidance now clarifies that `~/.codex/logs_2.sqlite*` must be
+  handled as one SQLite group and should not be live-rotated
 
 ## Non-Goals
 

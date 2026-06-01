@@ -183,11 +183,15 @@ Status values:
 - `done`: archive completed and restore artifacts were written.
 - `failed` / `skipped`: read the log and status details.
 
-If a job remains in `waiting`, Codex app-server processes are still alive. Quit
-Codex fully, check the status from a normal Terminal, and reopen Codex only
-after the status is `done` or `failed`. Newer deferred jobs remove their
-`launchctl` label after completion, and the archive worker is idempotent when a
-status file already says `done`.
+If a job remains in `waiting`, it is usually protecting local state rather than
+failing. Check `status.json` and `archive.log` first. Common blockers include a
+freshly reopened Codex app, `codex app-server` processes, older npm/CLI
+app-server processes, or Codex Desktop `browser_crashpad_handler` helpers that
+survived after the visible window closed. Quit Codex fully, inspect blockers
+from a normal Terminal, stop stale Codex processes only after review, and reopen
+Codex only after the status is `done` or `failed`. Newer deferred jobs remove
+their `launchctl` label after completion, and the archive worker is idempotent
+when a status file already says `done`.
 
 If Codex is already closed and you are in a normal Terminal, you can run the
 worker directly:
@@ -198,6 +202,19 @@ codex-speed-doctor-archive --manifest "/absolute/path/manifest.jsonl" --wait-for
 
 The archive worker writes a `state_5.sqlite` backup, `moved-sessions.jsonl`,
 `restore-selected-sessions.py`, and `archive-index.md`.
+
+## Log Rotation Note
+
+Large `logs_2.sqlite` files can slow diagnosis and startup recovery. Rotate logs
+only after Codex is closed, or through a deferred helper that waits for Codex
+processes to exit. Treat these files as one SQLite group:
+
+- `~/.codex/logs_2.sqlite`
+- `~/.codex/logs_2.sqlite-wal`
+- `~/.codex/logs_2.sqlite-shm`
+
+Back up and move the whole group together. Do not live-rotate logs while Codex
+is running, because SQLite WAL/SHM state can become inconsistent.
 
 ## Safety Model
 
