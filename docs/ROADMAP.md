@@ -38,6 +38,17 @@
 - Log rotation guidance now clarifies that `~/.codex/logs_2.sqlite*` must be
   handled as one SQLite group and should not be live-rotated
 
+## v0.4 Updates
+
+- Log diagnostics now report `total_rows`, `trace_percent`,
+  `growth_bytes_delta`, and `growth_rows_delta`
+- Default CLI sampling watches `logs_2.sqlite*` growth for 5 seconds
+- `--log-growth-seconds 0` supports a static snapshot without waiting
+- Active log burn is defined as TRACE at or above 70% plus continued byte or row
+  growth during the sample window
+- README and safety docs now contrast this evidence-based path with coarse
+  trigger, symlink, and live database mutation fixes
+
 ## Non-Goals
 
 - Reading credential files

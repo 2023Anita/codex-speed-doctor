@@ -56,9 +56,32 @@ Codex Speed Doctor now reports practical maintenance thresholds:
 - active sessions above 50 MB are priority handoff/archive candidates
 - `logs_2.sqlite` above 64 MB is watch-worthy
 - `logs_2.sqlite` above 100 MB should trigger a backup-first rotation plan
+- TRACE at or above 70% plus continued log growth during the sample window is
+  treated as active log burn
 
 These thresholds do not grant permission to mutate local state. They only make
 the next safe human decision clearer.
+
+## Log Burn Safety
+
+Codex Speed Doctor does not treat a large log file or a high TRACE share as
+enough evidence for emergency cleanup. Active log burn requires both:
+
+- TRACE is dominant, currently 70% or higher.
+- `logs_2.sqlite*` bytes or `logs` rows continue growing during the sample.
+
+This avoids destructive or misleading fixes for historical log volume. The
+normal response is still backup-first log rotation after Codex exits.
+
+Do not use these as default remedies:
+
+- SQLite triggers that block inserts into `logs`.
+- Symlinking `logs_2.sqlite` into `/tmp`.
+- Moving or deleting only `logs_2.sqlite` while WAL/SHM sidecar files exist.
+
+Those approaches can hide useful diagnostics or leave SQLite state harder to
+reason about. Keep them out of routine maintenance unless the user explicitly
+requests a high-risk experimental design review.
 
 ## Explicit Archive Commands
 

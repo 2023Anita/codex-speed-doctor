@@ -16,6 +16,8 @@ from typing import Iterable
 DEFAULT_LARGE_SESSION_MB = 50
 LOG_WATCH_MB = 64
 LOG_CLEANUP_MB = 100
+TRACE_DOMINANT_PERCENT = 70.0
+DEFAULT_LOG_GROWTH_SECONDS = 5.0
 
 
 @dataclass(frozen=True)
@@ -36,9 +38,14 @@ class SessionSummary:
 @dataclass(frozen=True)
 class LogSummary:
     logs_mb: float
+    total_rows: int
     level_counts: dict[str, int]
+    trace_percent: float
     warning_targets: dict[str, int]
     model_related_events: int
+    growth_sample_seconds: float
+    growth_bytes_delta: int
+    growth_rows_delta: int
 
 
 @dataclass(frozen=True)
@@ -173,14 +180,53 @@ def summarize_sessions(codex_home: Path, large_session_mb: int) -> SessionSummar
 
 
 def summarize_logs(codex_home: Path) -> LogSummary:
+    return summarize_logs_with_growth(codex_home, DEFAULT_LOG_GROWTH_SECONDS)
+
+
+def summarize_logs_with_growth(codex_home: Path, growth_seconds: float) -> LogSummary:
+    first_bytes = log_group_size(codex_home)
+    first_rows, level_counts, warning_targets, model_related_events = query_log_database(
+        codex_home
+    )
+    if growth_seconds <= 0:
+        second_bytes = first_bytes
+        second_rows = first_rows
+    else:
+        time.sleep(growth_seconds)
+        second_bytes = log_group_size(codex_home)
+        second_rows, _, _, _ = query_log_database(codex_home)
+    total_rows = max(first_rows, second_rows)
+    trace_count = level_counts.get("TRACE", 0)
+    trace_percent = round((trace_count * 100.0 / total_rows), 2) if total_rows else 0.0
+    return LogSummary(
+        logs_mb=mb(second_bytes),
+        total_rows=total_rows,
+        level_counts=level_counts,
+        trace_percent=trace_percent,
+        warning_targets=warning_targets,
+        model_related_events=model_related_events,
+        growth_sample_seconds=round(growth_seconds, 1),
+        growth_bytes_delta=max(0, second_bytes - first_bytes),
+        growth_rows_delta=max(0, second_rows - first_rows),
+    )
+
+
+def log_group_size(codex_home: Path) -> int:
     log_files = list(codex_home.glob("logs_2.sqlite*"))
-    logs_total = sum(path.stat().st_size for path in log_files if path.is_file())
+    return sum(path.stat().st_size for path in log_files if path.is_file())
+
+
+def query_log_database(
+    codex_home: Path,
+) -> tuple[int, dict[str, int], dict[str, int], int]:
     conn = open_sqlite_readonly(codex_home / "logs_2.sqlite")
+    total_rows = 0
     level_counts: dict[str, int] = {}
     warning_targets: dict[str, int] = {}
     model_related_events = 0
     if conn is not None:
         try:
+            total_rows = int(query_one(conn, "select count(*) from logs", (0,))[0])
             level_counts = {
                 str(level): int(count)
                 for level, count in conn.execute(
@@ -219,12 +265,7 @@ def summarize_logs(codex_home: Path) -> LogSummary:
             pass
         finally:
             conn.close()
-    return LogSummary(
-        logs_mb=mb(logs_total),
-        level_counts=level_counts,
-        warning_targets=warning_targets,
-        model_related_events=model_related_events,
-    )
+    return total_rows, level_counts, warning_targets, model_related_events
 
 
 def summarize_plugins_and_skills(codex_home: Path) -> PluginSkillSummary:
@@ -324,6 +365,22 @@ def build_recommendations(report: Report) -> list[str]:
         recommendations.append(
             f"logs_2.sqlite is above {LOG_WATCH_MB} MB. Watch growth and rotate logs later with a backup-first workflow."
         )
+    trace_dominant = report.logs.trace_percent >= TRACE_DOMINANT_PERCENT
+    actively_growing = (
+        report.logs.growth_bytes_delta > 0 or report.logs.growth_rows_delta > 0
+    )
+    if trace_dominant and actively_growing:
+        recommendations.append(
+            f"TRACE is dominant ({report.logs.trace_percent}%) and logs grew during the {report.logs.growth_sample_seconds}s sample. Treat this as an active log-burn condition: stop heavy Codex work, close Codex, then use backup-first log rotation after confirmation."
+        )
+    elif actively_growing:
+        recommendations.append(
+            f"logs_2.sqlite grew during the {report.logs.growth_sample_seconds}s sample. Re-run after closing busy tasks; rotate logs only after Codex exits if growth continues."
+        )
+    elif trace_dominant:
+        recommendations.append(
+            f"TRACE is dominant ({report.logs.trace_percent}%), but logs did not grow during the sample. This looks historical rather than an active burn."
+        )
     warning_targets = report.logs.warning_targets
     if any("skill" in target.lower() for target in warning_targets):
         recommendations.append(
@@ -344,9 +401,13 @@ def build_recommendations(report: Report) -> list[str]:
     return recommendations
 
 
-def collect_report(codex_home: Path, large_session_mb: int) -> Report:
+def collect_report(
+    codex_home: Path,
+    large_session_mb: int,
+    log_growth_seconds: float = DEFAULT_LOG_GROWTH_SECONDS,
+) -> Report:
     sessions = summarize_sessions(codex_home, large_session_mb)
-    logs = summarize_logs(codex_home)
+    logs = summarize_logs_with_growth(codex_home, log_growth_seconds)
     plugins_and_skills = summarize_plugins_and_skills(codex_home)
     model_cache = summarize_model_cache(codex_home)
     processes = summarize_processes()
@@ -397,7 +458,13 @@ def render_text(report: Report, details: bool) -> str:
     lines.append(f"- logs_mb: {report.logs.logs_mb}")
     lines.append(f"- log_watch_mb: {LOG_WATCH_MB}")
     lines.append(f"- log_cleanup_mb: {LOG_CLEANUP_MB}")
+    lines.append(f"- total_rows: {report.logs.total_rows}")
     lines.append(f"- level_counts: {format_mapping(report.logs.level_counts)}")
+    lines.append(f"- trace_percent: {report.logs.trace_percent}")
+    lines.append(f"- trace_dominant_percent: {TRACE_DOMINANT_PERCENT}")
+    lines.append(f"- growth_sample_seconds: {report.logs.growth_sample_seconds}")
+    lines.append(f"- growth_bytes_delta: {report.logs.growth_bytes_delta}")
+    lines.append(f"- growth_rows_delta: {report.logs.growth_rows_delta}")
     lines.append(f"- warning_targets: {format_mapping(report.logs.warning_targets)}")
     lines.append(f"- model_auth_network_events: {report.logs.model_related_events}")
     lines.append("")
@@ -473,6 +540,12 @@ def parse_args(argv: Iterable[str]) -> argparse.Namespace:
         action="store_true",
         help="Show local paths and session filenames. Default output is pseudonymous.",
     )
+    parser.add_argument(
+        "--log-growth-seconds",
+        type=float,
+        default=DEFAULT_LOG_GROWTH_SECONDS,
+        help="Seconds to sample logs_2.sqlite* growth. Use 0 to skip waiting.",
+    )
     return parser.parse_args(list(argv))
 
 
@@ -482,7 +555,8 @@ def main(argv: Iterable[str] | None = None) -> int:
     if not codex_home.exists():
         print(f"Codex home not found: {codex_home}", file=sys.stderr)
         return 2
-    report = collect_report(codex_home, args.large_session_mb)
+    log_growth_seconds = max(0.0, args.log_growth_seconds)
+    report = collect_report(codex_home, args.large_session_mb, log_growth_seconds)
     if args.json:
         output_report = report if args.details else redact_report(report)
         print(json.dumps(asdict(output_report), indent=2, ensure_ascii=False))

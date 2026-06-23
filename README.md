@@ -112,9 +112,43 @@ Desktop cleanup runs:
 - `logs_2.sqlite` above **64 MB** is watch-worthy.
 - `logs_2.sqlite` above **100 MB** should trigger a backup-first log rotation
   plan after Codex is closed.
+- Active log burn is treated as a combined condition: **TRACE at or above 70%**
+  and `logs_2.sqlite*` bytes or `logs` rows still growing during the sample
+  window.
 
 These thresholds are prompts for review, not automatic cleanup rules. The safe
 sequence is still diagnose, write handoffs, confirm, then archive or rotate.
+
+## Log Burn Detection
+
+Some quick-fix advice for large Codex logs suggests blocking SQLite inserts or
+symlinking the log database into a temporary directory. Codex Speed Doctor takes
+a safer path: it first separates **historical log volume** from **active disk
+burn**.
+
+The default report samples log growth for 5 seconds and reports:
+
+- `trace_percent`: how much of the log table is TRACE.
+- `growth_bytes_delta`: whether the `logs_2.sqlite*` file group grew.
+- `growth_rows_delta`: whether new log rows were inserted.
+
+That means a TRACE-heavy log file is not automatically treated as a crisis. It
+is only flagged as active log burn when TRACE is dominant and the database keeps
+growing during the sample.
+
+Skip the wait when you only need a static snapshot:
+
+```bash
+codex-speed-doctor --log-growth-seconds 0
+```
+
+This is intentionally more conservative than coarse fixes:
+
+| Coarse approach | Risk | Codex Speed Doctor approach |
+| --- | --- | --- |
+| Block inserts with a SQLite trigger | Hides diagnostics and mutates a live database | Keep diagnostics read-only; recommend backup-first rotation after Codex exits |
+| Symlink `logs_2.sqlite` into `/tmp` | Can confuse SQLite/WAL handling and lose useful evidence | Treat `logs_2.sqlite`, WAL, and SHM as one group |
+| Delete or move only the main database | Can leave WAL/SHM state inconsistent | Back up and rotate the whole SQLite file group together |
 
 ## What It Diagnoses
 
@@ -254,7 +288,13 @@ Logs
 - logs_mb: 88.9
 - log_watch_mb: 64
 - log_cleanup_mb: 100
+- total_rows: 1932
 - level_counts: INFO=561, TRACE=1287, WARN=84
+- trace_percent: 66.61
+- trace_dominant_percent: 70.0
+- growth_sample_seconds: 5.0
+- growth_bytes_delta: 0
+- growth_rows_delta: 0
 - warning_targets: codex_core_plugins::manifest=20, codex_core_skills::loader=64
 - model_auth_network_events: 12
 
@@ -282,6 +322,9 @@ codex-speed-doctor
 
 # JSON output for automation
 codex-speed-doctor --json
+
+# Static snapshot without waiting for the growth sample
+codex-speed-doctor --log-growth-seconds 0
 
 # Show local paths and raw session filenames
 codex-speed-doctor --details

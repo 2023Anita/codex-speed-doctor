@@ -516,6 +516,31 @@
       <section>
         <div class="section-inner">
           <div class="section-head">
+            <h2 data-i18n="burnTitle">识别真正的日志燃烧</h2>
+            <p class="section-copy" data-i18n="burnCopy">
+              新版本不会只因为 TRACE 多或日志大就动数据库。它用 TRACE 占比加增长采样判断是不是正在写盘，再建议退出 Codex 后做备份优先轮转。
+            </p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong data-i18n="burnSignalTitle">组合信号</strong>
+              <p data-i18n="burnSignalBody">只有 TRACE 达到 70% 且采样期间行数或文件组继续增长，才标记 active log burn。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="burnNoHackTitle">不粗暴掐写入</strong>
+              <p data-i18n="burnNoHackBody">默认不创建 SQLite trigger，不把日志库软链到临时目录，避免隐藏诊断证据。</p>
+            </div>
+            <div class="metric">
+              <strong data-i18n="burnSqliteTitle">尊重 SQLite 文件组</strong>
+              <p data-i18n="burnSqliteBody">处理日志时把主库、WAL 和 SHM 作为一组，只在确认后做备份优先轮转。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-inner">
+          <div class="section-head">
             <h2 data-i18n="audienceTitle">给谁用，解决什么</h2>
             <p class="section-copy" data-i18n="audienceCopy">
               可以把它理解成 Codex 的本地体检报告。它不诊断患者，也不读取医学资料；它只检查你的 Codex 本地状态，帮你判断为什么工具变慢，以及下一步怎样处理更安全。
@@ -586,7 +611,10 @@ cd codex-speed-doctor
 PYTHONPATH=src python3 -m codex_speed_doctor.cli
 
 # JSON output
-PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
+PYTHONPATH=src python3 -m codex_speed_doctor.cli --json
+
+# Static snapshot without the 5-second growth sample
+PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></pre>
           </div>
         </div>
       </section>
@@ -761,6 +789,14 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           plainLogBody: "64 MB 开始提醒观察，100 MB 建议关闭 Codex 后备份轮转。",
           plainToolTitle: "插件或 Skill 报 warning",
           plainToolBody: "先定位 warning 来源，再决定是否移动某个插件或 Skill。",
+          burnTitle: "识别真正的日志燃烧",
+          burnCopy: "新版本不会只因为 TRACE 多或日志大就动数据库。它用 TRACE 占比加增长采样判断是不是正在写盘，再建议退出 Codex 后做备份优先轮转。",
+          burnSignalTitle: "组合信号",
+          burnSignalBody: "只有 TRACE 达到 70% 且采样期间行数或文件组继续增长，才标记 active log burn。",
+          burnNoHackTitle: "不粗暴掐写入",
+          burnNoHackBody: "默认不创建 SQLite trigger，不把日志库软链到临时目录，避免隐藏诊断证据。",
+          burnSqliteTitle: "尊重 SQLite 文件组",
+          burnSqliteBody: "处理日志时把主库、WAL 和 SHM 作为一组，只在确认后做备份优先轮转。",
           commandTitle: "一条命令先体检",
           commandCopy: "先在本地运行报告。第一次输出应该解释问题形状，再决定是否归档、恢复、移动插件或重建缓存。",
           mapTitle: "本地状态地图",
@@ -838,6 +874,14 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           plainLogBody: "64 MB becomes watch-worthy; 100 MB calls for backup-first rotation after Codex is closed.",
           plainToolTitle: "Plugin or Skill warnings",
           plainToolBody: "Find the warning source first, then decide whether a plugin or Skill should be moved.",
+          burnTitle: "Detect Real Log Burn",
+          burnCopy: "The new version does not touch the database just because TRACE is high or the file is large. It combines TRACE share with a growth sample, then recommends backup-first rotation after Codex exits.",
+          burnSignalTitle: "Combined signal",
+          burnSignalBody: "Active log burn is flagged only when TRACE reaches 70% and rows or the SQLite file group keep growing during the sample.",
+          burnNoHackTitle: "No write-blocking hack",
+          burnNoHackBody: "The default workflow does not create SQLite triggers or symlink the log database into a temporary directory, preserving diagnostic evidence.",
+          burnSqliteTitle: "SQLite group aware",
+          burnSqliteBody: "The main database, WAL, and SHM files are treated as one group and rotated only through a reviewed backup-first path.",
           commandTitle: "Start With One Command",
           commandCopy: "Run the report locally. The first pass should explain the shape of the problem before any archive, restore, plugin move, or cache rebuild.",
           mapTitle: "Local State Map",
@@ -915,6 +959,14 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           plainLogBody: "64 MB で監視、100 MB で Codex 終了後のバックアップ優先ローテーションを検討します。",
           plainToolTitle: "Plugin や Skill の warning",
           plainToolBody: "まず warning の出所を特定し、移動するかどうかを判断します。",
+          burnTitle: "本当のログ燃焼を検出",
+          burnCopy: "新しい版は TRACE が多い、またはファイルが大きいだけでデータベースを変更しません。TRACE 比率と増加サンプルを組み合わせ、Codex 終了後のバックアップ優先ローテーションを提案します。",
+          burnSignalTitle: "複合シグナル",
+          burnSignalBody: "TRACE が 70% 以上で、サンプル中に行数または SQLite ファイル群が増え続ける場合だけ active log burn とします。",
+          burnNoHackTitle: "書き込み遮断ハックなし",
+          burnNoHackBody: "既定フローでは SQLite trigger を作らず、ログ DB を一時ディレクトリへ symlink せず、診断証拠を残します。",
+          burnSqliteTitle: "SQLite ファイル群を尊重",
+          burnSqliteBody: "主 DB、WAL、SHM を一つのグループとして扱い、確認済みの backup-first 経路でのみローテーションします。",
           commandTitle: "まず 1 コマンドで診断",
           commandCopy: "ローカルでレポートを実行します。最初の出力で問題の形を把握してから、アーカイブ、復元、プラグイン移動、キャッシュ再作成を判断します。",
           mapTitle: "ローカル状態マップ",
@@ -992,6 +1044,14 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --json</code></pre>
           plainLogBody: "64 MB부터 관찰하고 100 MB부터 Codex 종료 후 백업 우선 회전을 검토합니다.",
           plainToolTitle: "Plugin 또는 Skill warning",
           plainToolBody: "먼저 warning 출처를 찾고 플러그인이나 Skill을 이동할지 결정합니다.",
+          burnTitle: "진짜 로그 과열 감지",
+          burnCopy: "새 버전은 TRACE가 많거나 파일이 크다는 이유만으로 데이터베이스를 건드리지 않습니다. TRACE 비율과 증가 샘플을 함께 보고, Codex 종료 후 백업 우선 회전을 권장합니다.",
+          burnSignalTitle: "복합 신호",
+          burnSignalBody: "TRACE가 70% 이상이고 샘플 중 행 수 또는 SQLite 파일 그룹이 계속 증가할 때만 active log burn으로 표시합니다.",
+          burnNoHackTitle: "쓰기 차단 해킹 없음",
+          burnNoHackBody: "기본 흐름은 SQLite trigger를 만들거나 로그 DB를 임시 디렉터리에 symlink하지 않아 진단 근거를 보존합니다.",
+          burnSqliteTitle: "SQLite 파일 그룹 존중",
+          burnSqliteBody: "메인 DB, WAL, SHM을 한 그룹으로 보고, 확인된 백업 우선 경로에서만 회전합니다.",
           commandTitle: "먼저 한 줄 명령으로 진단",
           commandCopy: "로컬에서 보고서를 실행합니다. 첫 출력으로 문제의 형태를 파악한 뒤 아카이브, 복원, 플러그인 이동, 캐시 재생성을 결정합니다.",
           mapTitle: "로컬 상태 지도",

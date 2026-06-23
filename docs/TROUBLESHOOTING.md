@@ -42,21 +42,29 @@ Interpretation:
 - below 64 MB: usually no log maintenance needed
 - 64 MB or above: watch growth and investigate repeated warnings
 - 100 MB or above: prepare backup-first log rotation after Codex is closed
+- TRACE at or above 70% is notable only when the log database is still growing
+  during the sample window
 
 Suggested fix:
 
-1. Run `codex-speed-doctor` and note `logs_mb`, `log_watch_mb`, and
-   `log_cleanup_mb`.
-2. Review warning targets before touching the log database.
-3. Close Codex fully.
-4. Back up or move `~/.codex/logs_2.sqlite`,
+1. Run `codex-speed-doctor` and note `logs_mb`, `trace_percent`,
+   `growth_bytes_delta`, and `growth_rows_delta`.
+2. If TRACE is high but growth is zero, treat it as historical log volume rather
+   than active disk burn.
+3. Review warning targets before touching the log database.
+4. Close Codex fully.
+5. Back up or move `~/.codex/logs_2.sqlite`,
    `~/.codex/logs_2.sqlite-wal`, and `~/.codex/logs_2.sqlite-shm`
    together.
-5. Reopen Codex and verify that a fresh log database was created.
+6. Reopen Codex and verify that a fresh log database was created.
 
 Do not delete log files in place while Codex is running. The log database lives
 directly under `~/.codex` as `logs_2.sqlite*`; it is not under a `logs/`
 subdirectory.
+
+Avoid coarse fixes such as SQLite triggers that ignore inserts or symlinking the
+database into `/tmp`. They may reduce writes, but they also mutate live logging
+behavior and can hide the evidence needed to understand what is wrong.
 
 ## Symptom: deferred archive stays in `waiting`
 
