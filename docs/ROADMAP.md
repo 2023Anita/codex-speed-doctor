@@ -37,6 +37,10 @@
   process cleanup for Codex Desktop, app-server, and crashpad helper blockers
 - Log rotation guidance now clarifies that `~/.codex/logs_2.sqlite*` must be
   handled as one SQLite group and should not be live-rotated
+- Archive preflight confines sources to active `.jsonl` files under the Codex
+  sessions root and rejects duplicate, unregistered, or conflicting records
+- Process inspection is fail-closed and covers Desktop, app-server, OpenAI Codex
+  helpers, and relevant Crashpad processes
 
 ## v0.4 Updates
 

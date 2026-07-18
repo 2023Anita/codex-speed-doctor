@@ -12,25 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
-from codex_speed_doctor.archive import read_manifest, write_status
-
-
-def validate_manifest(path: Path) -> list[dict[str, str]]:
-    if not path.exists():
-        raise FileNotFoundError(f"manifest not found: {path}")
-    rows = read_manifest(path)
-    for item in rows:
-        handoff = Path(item["handoff"]).expanduser()
-        source = Path(item["source"]).expanduser()
-        if not handoff.is_absolute():
-            raise ValueError(f"handoff path must be absolute for {item['slug']}: {handoff}")
-        if not source.is_absolute():
-            raise ValueError(f"source path must be absolute for {item['slug']}: {source}")
-        if not handoff.exists():
-            raise FileNotFoundError(f"handoff not found for {item['slug']}: {handoff}")
-        if not source.exists():
-            raise FileNotFoundError(f"source session not found for {item['slug']}: {source}")
-    return rows
+from codex_speed_doctor.archive import preflight_manifest, write_status
 
 
 def build_archive_command(
@@ -99,7 +81,7 @@ def launch_with_terminal(command: list[str], log_path: Path) -> None:
 def defer(args: argparse.Namespace) -> int:
     codex_home = Path(args.codex_home).expanduser().resolve()
     manifest = Path(args.manifest).expanduser().resolve()
-    rows = validate_manifest(manifest)
+    rows = preflight_manifest(manifest, codex_home)
 
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     job_id = f"deferred-archive-{stamp}-{os.getpid()}"

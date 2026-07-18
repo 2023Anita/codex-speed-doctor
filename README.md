@@ -201,8 +201,15 @@ log_path /Users/me/.codex/archive_jobs/.../archive.log
 status_path /Users/me/.codex/archive_jobs/.../status.json
 ```
 
-The background worker waits until Codex app-server processes exit, then runs the
-safe archive command. Check progress with:
+Before creating backup or archive directories, the worker preflights every
+manifest record. Each source must be a unique active `.jsonl` under
+`<codex_home>/sessions`, have an existing handoff, match `state_5.sqlite`, and
+resolve to a non-conflicting archive destination.
+
+The background worker waits until Codex Desktop, app-server, OpenAI Codex
+helpers, and relevant Crashpad processes exit, then runs the safe archive
+command. Process-inspection errors fail closed instead of being treated as a
+safe-to-continue state. Check progress with:
 
 ```bash
 cat "/path/to/status.json"

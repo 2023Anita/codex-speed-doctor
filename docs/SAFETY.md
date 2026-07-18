@@ -92,10 +92,20 @@ Use it only after you have selected exact sessions and created handoff notes.
   to exit before mutating local state.
 - `codex-speed-doctor-archive` performs the backup-first archive work directly.
 
-Both commands require a manifest with explicit absolute paths. The archive worker
-backs up `state_5.sqlite`, moves selected session files into `archived_sessions`,
-updates the selected thread records, and writes restore artifacts. It does not
-delete sessions permanently.
+Both commands require a manifest with explicit absolute paths. Before creating
+backup or archive directories, preflight requires every source to be a unique
+`.jsonl` under `<codex_home>/sessions`, verifies that its handoff exists, and
+confirms that `state_5.sqlite` still registers it as an active thread. Sources
+outside the sessions root, archived or unregistered threads, duplicate sources,
+and destination collisions are rejected without moving files.
+
+The archive worker backs up `state_5.sqlite`, moves selected session files into
+`archived_sessions`, updates the selected thread records, and writes restore
+artifacts. It does not delete sessions permanently.
+
+Process detection is fail-closed. The worker treats Codex Desktop, app-server,
+OpenAI Codex helpers, and relevant Crashpad processes as blockers. If process
+inspection itself fails, archive work stops instead of assuming Codex has exited.
 
 Deferred archive jobs are designed to avoid repeated execution after completion:
 the launchd label is removed when the worker exits, and a worker that sees an
