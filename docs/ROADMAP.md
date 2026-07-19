@@ -37,10 +37,6 @@
   process cleanup for Codex Desktop, app-server, and crashpad helper blockers
 - Log rotation guidance now clarifies that `~/.codex/logs_2.sqlite*` must be
   handled as one SQLite group and should not be live-rotated
-- Archive preflight confines sources to active `.jsonl` files under the Codex
-  sessions root and rejects duplicate, unregistered, or conflicting records
-- Process inspection is fail-closed and covers Desktop, app-server, OpenAI Codex
-  helpers, and relevant Crashpad processes
 
 ## v0.4 Updates
 
@@ -52,6 +48,22 @@
   growth during the sample window
 - README and safety docs now contrast this evidence-based path with coarse
   trigger, symlink, and live database mutation fixes
+
+## v0.5.0 Updates
+
+- Archive preflight confines sources to active `.jsonl` files under the Codex
+  sessions root
+- Handoffs, active thread state, duplicate sources, and archive destinations are
+  validated before backup or archive directories are created
+- Process inspection is fail-closed and covers Desktop, app-server, OpenAI Codex
+  helpers, and relevant Crashpad processes
+- Regression tests cover path escape, unregistered sessions, blocker matching,
+  and process-inspection failure
+- Package metadata and runtime version are aligned at `0.5.0`
+- README and GitHub Pages now explain release changes, advantages, architecture,
+  safety boundaries, and verification more clearly
+- The visual system is replaced with ChatGPT-generated Japanese hand-drawn
+  Doraemon collaboration illustrations, each paired with accessible explanatory text
 
 ## Non-Goals
 

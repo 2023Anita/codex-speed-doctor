@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <meta
       name="description"
       content="Codex Speed Doctor 是本地优先、默认只读的 Codex 启动速度诊断工具。"
@@ -11,14 +12,17 @@
     <style>
       :root {
         color-scheme: light;
-        --ink: #0f172a;
-        --muted: #475569;
-        --subtle: #64748b;
-        --line: #d9e7ef;
-        --paper: #f8fbfd;
-        --panel: #ffffff;
-        --teal: #0f766e;
-        --cyan: #0891b2;
+        --ink: #17324d;
+        --muted: #496174;
+        --subtle: #6c7f8d;
+        --line: #d8e3df;
+        --paper: #fffaf0;
+        --panel: #fffdf7;
+        --teal: #187e9d;
+        --cyan: #149bd7;
+        --blue: #1167a8;
+        --red: #e54b4b;
+        --yellow: #f3c84b;
         --green: #16a34a;
         --amber: #d97706;
         --danger: #dc2626;
@@ -30,11 +34,11 @@
 
       body {
         margin: 0;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
+        font-family: "Avenir Next", "Hiragino Sans", "Yu Gothic", sans-serif;
         color: var(--ink);
-        background: var(--paper);
+        background:
+          radial-gradient(circle at 12% 8%, rgba(20, 155, 215, 0.08), transparent 28%),
+          var(--paper);
       }
 
       a {
@@ -53,8 +57,8 @@
         display: flex;
         align-items: center;
         overflow: hidden;
-        color: #f8fafc;
-        background: #0f172a;
+        color: var(--ink);
+        background: #dff3fb;
       }
 
       .hero::before {
@@ -62,7 +66,7 @@
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(90deg, rgba(8, 20, 45, 0.9) 0%, rgba(8, 20, 45, 0.72) 42%, rgba(8, 20, 45, 0.16) 100%),
+          linear-gradient(90deg, rgba(255, 250, 240, 0.98) 0%, rgba(255, 250, 240, 0.9) 38%, rgba(255, 250, 240, 0.18) 70%, rgba(255, 250, 240, 0.02) 100%),
           url("assets/hero-codex-diagnostic.png") center / cover no-repeat;
       }
 
@@ -73,7 +77,7 @@
         right: 0;
         bottom: 0;
         height: 96px;
-        background: linear-gradient(180deg, rgba(248, 251, 253, 0), var(--paper));
+        background: linear-gradient(180deg, rgba(255, 250, 240, 0), var(--paper));
       }
 
       .hero-inner,
@@ -101,9 +105,9 @@
         flex-wrap: wrap;
         gap: 6px;
         padding: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 8px;
-        background: rgba(15, 23, 42, 0.42);
+        border: 1px solid rgba(17, 103, 168, 0.22);
+        border-radius: 999px;
+        background: rgba(255, 253, 247, 0.82);
         backdrop-filter: blur(14px);
       }
 
@@ -112,7 +116,7 @@
         padding: 0 11px;
         border: 0;
         border-radius: 6px;
-        color: #dbeafe;
+        color: var(--blue);
         background: transparent;
         font: inherit;
         font-size: 13px;
@@ -121,8 +125,8 @@
       }
 
       .language-switch button[aria-pressed="true"] {
-        color: #0f172a;
-        background: #ecfeff;
+        color: #ffffff;
+        background: var(--blue);
       }
 
       .eyebrow {
@@ -130,7 +134,7 @@
         align-items: center;
         gap: 10px;
         margin: 0;
-        color: #bdebf2;
+        color: var(--blue);
         font-size: 13px;
         font-weight: 800;
         letter-spacing: 0;
@@ -142,8 +146,8 @@
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background: var(--green);
-        box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.16);
+        background: var(--red);
+        box-shadow: 0 0 0 5px rgba(229, 75, 75, 0.14);
       }
 
       h1 {
@@ -151,13 +155,27 @@
         margin: 0;
         font-size: 58px;
         line-height: 1.02;
-        letter-spacing: 0;
+        letter-spacing: -0.03em;
+        font-family: "Iowan Old Style", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      }
+
+      .version-badge {
+        display: inline-flex;
+        margin-bottom: 18px;
+        padding: 8px 13px;
+        border: 1px solid rgba(229, 75, 75, 0.24);
+        border-radius: 999px;
+        color: #a62e2e;
+        background: rgba(255, 253, 247, 0.88);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
       }
 
       .hero-copy {
         max-width: 700px;
         margin: 22px 0 0;
-        color: #dbeafe;
+        color: var(--muted);
         font-size: 20px;
         line-height: 1.65;
       }
@@ -175,19 +193,19 @@
         justify-content: center;
         min-height: 44px;
         padding: 0 18px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        border: 1px solid rgba(17, 103, 168, 0.24);
         font-weight: 800;
       }
 
       .button.primary {
-        background: #ecfeff;
-        color: #0f172a;
+        background: var(--blue);
+        color: #ffffff;
       }
 
       .button.secondary {
-        color: #e0f2fe;
-        background: rgba(15, 23, 42, 0.42);
+        color: var(--blue);
+        background: rgba(255, 253, 247, 0.88);
       }
 
       section {
@@ -199,6 +217,7 @@
       }
 
       .status-grid,
+      .release-grid,
       .metric-grid,
       .audience-grid,
       .safety-grid {
@@ -218,9 +237,9 @@
       .command-panel,
       .image-frame {
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 18px;
         background: var(--panel);
-        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
+        box-shadow: 0 14px 38px rgba(23, 50, 77, 0.07);
       }
 
       .stat,
@@ -276,7 +295,46 @@
         margin: 0;
         font-size: 34px;
         line-height: 1.14;
-        letter-spacing: 0;
+        letter-spacing: -0.02em;
+        font-family: "Iowan Old Style", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      }
+
+      .release-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .release-card {
+        position: relative;
+        overflow: hidden;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+      }
+
+      .release-card::before {
+        content: "";
+        display: block;
+        width: 42px;
+        height: 6px;
+        margin-bottom: 20px;
+        border-radius: 999px;
+        background: var(--cyan);
+      }
+
+      .release-card:nth-child(2)::before { background: var(--red); }
+      .release-card:nth-child(3)::before { background: var(--yellow); }
+      .release-card:nth-child(4)::before { background: var(--green); }
+
+      .release-card strong {
+        display: block;
+        margin-bottom: 9px;
+      }
+
+      .release-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
       }
 
       .section-copy {
@@ -294,7 +352,7 @@
         gap: 8px;
         padding: 13px 16px;
         border-bottom: 1px solid #d8e6ef;
-        background: #eef7fb;
+        background: rgba(220, 242, 249, 0.56);
       }
 
       .dot {
@@ -391,7 +449,7 @@
         padding: 34px 0;
         color: var(--subtle);
         border-top: 1px solid var(--line);
-        background: #ffffff;
+        background: #fffdf7;
       }
 
       .footer-inner {
@@ -424,6 +482,7 @@
         }
 
         .status-grid,
+        .release-grid,
         .metric-grid,
         .audience-grid,
         .workflow-grid,
@@ -435,6 +494,7 @@
       @media (max-width: 620px) {
         .hero {
           min-height: 84vh;
+          background-position: 27% center;
         }
 
         .hero-inner,
@@ -455,6 +515,7 @@
         }
 
         .status-grid,
+        .release-grid,
         .metric-grid,
         .audience-grid,
         .workflow-grid,
@@ -476,6 +537,7 @@
             <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
           </div>
         </div>
+        <span class="version-badge">v0.5.0 · SAFER ARCHIVE</span>
         <h1 data-i18n="title">Codex Speed Doctor</h1>
         <p class="hero-copy" data-i18n="heroCopy">
           在清理任何东西之前，先找出 Codex 为什么变慢。用只读报告诊断
@@ -509,6 +571,35 @@
               <strong data-i18n="statBackupTitle">备份意识</strong>
               <span data-i18n="statBackupBody">清理动作放到单独确认过的维护步骤里。</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-inner">
+          <div class="section-head">
+            <h2 data-i18n="releaseTitle">v0.5.0：先预检，再归档</h2>
+            <p class="section-copy" data-i18n="releaseCopy">
+              新版本把安全边界写进执行路径：路径、handoff、数据库状态、重复项和目标冲突全部在任何移动发生前完成验证。
+            </p>
+          </div>
+          <div class="release-grid">
+            <article class="release-card">
+              <strong data-i18n="releasePathTitle">路径被严格圈定</strong>
+              <p data-i18n="releasePathBody">只接受 Codex sessions 根目录内的 active JSONL，外部文件无法进入归档计划。</p>
+            </article>
+            <article class="release-card">
+              <strong data-i18n="releaseStateTitle">文件与数据库一致</strong>
+              <p data-i18n="releaseStateBody">每个 session 都必须在 state_5.sqlite 中仍是 active thread。</p>
+            </article>
+            <article class="release-card">
+              <strong data-i18n="releaseBlockerTitle">Blocker 检查 fail-closed</strong>
+              <p data-i18n="releaseBlockerBody">Desktop、app-server、helper 与 Crashpad 都会阻止维护；检查失败也不会被当成安全。</p>
+            </article>
+            <article class="release-card">
+              <strong data-i18n="releaseTestTitle">安全行为可回归验证</strong>
+              <p data-i18n="releaseTestBody">新增边界逃逸、未登记 session、blocker 识别和进程检查失败测试。</p>
+            </article>
           </div>
         </div>
       </section>
@@ -644,11 +735,11 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           <figure class="image-frame">
             <img
               src="assets/local-state-map.png"
-              alt="A clinical diagnostic map of Codex local state modules"
+              alt="Doraemon guiding a map of Codex local-state modules"
               data-i18n-attr="alt:mapAlt"
             />
             <figcaption class="caption" data-i18n="mapCaption">
-              图片不承担关键文字说明；页面文字负责标注 sessions、logs、plugins、skills 和 model cache。
+              哆啦A梦带着检查工具走过五个区域：sessions、logs、plugins、skills 与 model cache；真正的诊断来自这些证据的组合。
             </figcaption>
           </figure>
         </div>
@@ -692,11 +783,11 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           <figure class="image-frame">
             <img
               src="assets/handoff-archive-flow.png"
-              alt="A clinical handoff style flow from large chat to handoff note to archive"
+              alt="An engineer and Doraemon preserving a handoff before archive"
               data-i18n-attr="alt:workflowAlt"
             />
             <figcaption class="caption" data-i18n="workflowCaption">
-              Handoff 是一份紧凑、可读的续接说明，不替代原始 session，而是回到工作的安全桥梁。
+              红线代表上下文连续性：先理解大会话，再写 handoff，最后进入带备份和恢复路径的归档。
             </figcaption>
           </figure>
         </div>
@@ -735,11 +826,11 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           <figure class="image-frame">
             <img
               src="assets/safety-boundary.png"
-              alt="A read-only safety boundary diagram for local diagnostics"
+              alt="Doraemon guarding the read-only diagnostic boundary"
               data-i18n-attr="alt:safetyAlt"
             />
             <figcaption class="caption" data-i18n="safetyCaption">
-              默认姿态是本地、只读、脱敏，所以第一次诊断足够低风险。
+              中央区域保持只读；凭证继续密封，备份独立保存，只有 blocker 清空并确认后，维护动作才会进入。
             </figcaption>
           </figure>
         </div>
@@ -748,7 +839,7 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
 
     <footer class="footer">
       <div class="section-inner footer-inner">
-        <span data-i18n="footerLeft">Codex Speed Doctor · MIT</span>
+        <span data-i18n="footerLeft">Codex Speed Doctor · v0.5.0 · Anita · MIT</span>
         <span><span data-i18n="footerRight">GitHub Pages 源文件：</span><code>docs/index.html</code></span>
       </div>
     </footer>
@@ -771,6 +862,16 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           statHandoffBody: "归档前先让长对话可继续接上。",
           statBackupTitle: "备份意识",
           statBackupBody: "清理动作放到单独确认过的维护步骤里。",
+          releaseTitle: "v0.5.0：先预检，再归档",
+          releaseCopy: "新版本把安全边界写进执行路径：路径、handoff、数据库状态、重复项和目标冲突全部在任何移动发生前完成验证。",
+          releasePathTitle: "路径被严格圈定",
+          releasePathBody: "只接受 Codex sessions 根目录内的 active JSONL，外部文件无法进入归档计划。",
+          releaseStateTitle: "文件与数据库一致",
+          releaseStateBody: "每个 session 都必须在 state_5.sqlite 中仍是 active thread。",
+          releaseBlockerTitle: "Blocker 检查 fail-closed",
+          releaseBlockerBody: "Desktop、app-server、helper 与 Crashpad 都会阻止维护；检查失败也不会被当成安全。",
+          releaseTestTitle: "安全行为可回归验证",
+          releaseTestBody: "新增边界逃逸、未登记 session、blocker 识别和进程检查失败测试。",
           audienceTitle: "给谁用，解决什么",
           audienceCopy: "可以把它理解成 Codex 的本地体检报告。它不诊断患者，也不读取医学资料；它只检查你的 Codex 本地状态，帮你判断为什么工具变慢，以及下一步怎样处理更安全。",
           audienceMedicalTitle: "医疗与科研人员",
@@ -807,8 +908,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           metricLogsBody: "汇总日志大小和 warning target；64 MB 开始观察，100 MB 建议备份后轮转。",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "统计本地加载面，并突出插件与 Skill 的 warning 模式。",
-          mapAlt: "Codex 本地状态模块的临床诊断地图",
-          mapCaption: "图片不承担关键文字说明；页面文字负责标注 sessions、logs、plugins、skills 和 model cache。",
+          mapAlt: "哆啦A梦带领检查 Codex 本地状态地图",
+          mapCaption: "哆啦A梦带着检查工具走过五个区域：sessions、logs、plugins、skills 与 model cache；真正的诊断来自这些证据的组合。",
           workflowTitle: "归档前先 handoff",
           workflowCopy: "更安全的流程是：诊断、写 handoff、确认 session 路径和数据库状态、等待 Codex 相关进程退出，再备份归档并保留恢复路径。",
           stepDiagnoseTitle: "诊断",
@@ -821,8 +922,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           stepIndexBody: "留下可检索记录，之后能按主题找回旧工作。",
           stepRestoreTitle: "恢复",
           stepRestoreBody: "需要找回 session 时使用备份和恢复脚本。",
-          workflowAlt: "从大聊天到 handoff 说明再到归档的临床交接流程",
-          workflowCaption: "Handoff 是一份紧凑、可读的续接说明，不替代原始 session，而是回到工作的安全桥梁。",
+          workflowAlt: "工程师与哆啦A梦先保留 handoff 再归档",
+          workflowCaption: "红线代表上下文连续性：先理解大会话，再写 handoff，最后进入带备份和恢复路径的归档。",
           safetyTitle: "安全边界",
           safetyCopy: "Codex Speed Doctor 是诊断工具，不是清理器。它先回答“可能慢在哪里”，再让维护动作进入明确确认流程。",
           safetyCleanupTitle: "不自动清理",
@@ -835,9 +936,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           safetyDetailsSuffix: "。",
           safetyReviewedTitle: "清理保持可审阅",
           safetyReviewedBody: "归档和恢复应放在 backup-first 的维护流程里。",
-          safetyAlt: "本地诊断的只读安全边界图",
-          safetyCaption: "默认姿态是本地、只读、脱敏，所以第一次诊断足够低风险。",
-          footerLeft: "Codex Speed Doctor · MIT",
+          safetyAlt: "哆啦A梦守护本地只读诊断边界",
+          safetyCaption: "中央区域保持只读；凭证继续密封，备份独立保存，只有 blocker 清空并确认后，维护动作才会进入。",
+          footerLeft: "Codex Speed Doctor · v0.5.0 · Anita · MIT",
           footerRight: "GitHub Pages 源文件："
         },
         en: {
@@ -856,6 +957,16 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           statHandoffBody: "Keep long-running work resumable before archiving sessions.",
           statBackupTitle: "Backup-aware",
           statBackupBody: "Cleanup belongs in a separate reviewed maintenance step.",
+          releaseTitle: "v0.5.0: Preflight Before Archive",
+          releaseCopy: "The safety boundary now lives in the execution path: source containment, handoff, thread state, duplicates, and destination conflicts are checked before any move.",
+          releasePathTitle: "Confined source paths",
+          releasePathBody: "Only active JSONL files under the Codex sessions root can enter an archive plan.",
+          releaseStateTitle: "Filesystem and DB agree",
+          releaseStateBody: "Every source must still map to an active thread in state_5.sqlite.",
+          releaseBlockerTitle: "Fail-closed blockers",
+          releaseBlockerBody: "Desktop, app-server, helpers, and Crashpad block maintenance; inspection failure is never treated as safe.",
+          releaseTestTitle: "Regression-tested safety",
+          releaseTestBody: "Tests cover path escape, unregistered sessions, blocker matching, and process-inspection failure.",
           audienceTitle: "Who it helps",
           audienceCopy: "Think of it as a local check-up for Codex. It does not diagnose patients or read medical files; it checks local Codex state so you can see why the tool feels slow and what to do next safely.",
           audienceMedicalTitle: "Clinicians and researchers",
@@ -892,8 +1003,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           metricLogsBody: "Summarizes log size and warning targets; 64 MB is watch-worthy and 100 MB calls for backup-first rotation.",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "Counts local loading surface and highlights warning patterns.",
-          mapAlt: "A clinical diagnostic map of Codex local state modules",
-          mapCaption: "The visual labels are supplied by the page, not by the generated image: sessions, logs, plugins, skills, and model cache are checked as separate local-state signals.",
+          mapAlt: "Doraemon guiding a map of Codex local-state modules",
+          mapCaption: "Doraemon visits five evidence zones—sessions, logs, plugins, skills, and model cache—while the report evaluates them together around the central laptop.",
           workflowTitle: "Handoff Before Archive",
           workflowCopy: "The safest workflow is diagnose, write a handoff, preflight session paths and database state, wait for Codex blockers to exit, then archive with backup and restore artifacts.",
           stepDiagnoseTitle: "Diagnose",
@@ -906,8 +1017,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           stepIndexBody: "Keep a searchable record so old work can be found by topic.",
           stepRestoreTitle: "Restore",
           stepRestoreBody: "Use backups and restore scripts when a session needs to return.",
-          workflowAlt: "A clinical handoff style flow from large chat to handoff note to archive",
-          workflowCaption: "Handoff means a compact, human-readable continuation note. It is not a replacement for the original session; it is the safe bridge back to the work.",
+          workflowAlt: "An engineer and Doraemon preserving a handoff before archive",
+          workflowCaption: "The red thread represents continuity: understand the large conversation, write the handoff, then archive with backup and a path back.",
           safetyTitle: "Safety Boundary",
           safetyCopy: "Codex Speed Doctor is a diagnostic tool, not a cleaner. It is meant to answer what is likely slow before anyone reaches for mutating maintenance commands.",
           safetyCleanupTitle: "No automatic cleanup",
@@ -920,9 +1031,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           safetyDetailsSuffix: " flag.",
           safetyReviewedTitle: "Cleanup stays reviewed",
           safetyReviewedBody: "Archive and restore steps belong in backup-first workflows.",
-          safetyAlt: "A read-only safety boundary diagram for local diagnostics",
-          safetyCaption: "The default posture is local, read-only, and pseudonymous. That makes the first diagnosis low-risk even when Codex is already slow.",
-          footerLeft: "Codex Speed Doctor · MIT",
+          safetyAlt: "Doraemon guarding the read-only diagnostic boundary",
+          safetyCaption: "The center remains read-only; credentials stay sealed, backups stay separate, and maintenance enters only after blockers clear and consent is explicit.",
+          footerLeft: "Codex Speed Doctor · v0.5.0 · Anita · MIT",
           footerRight: "GitHub Pages source: "
         },
         ja: {
@@ -941,6 +1052,16 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           statHandoffBody: "アーカイブ前に長い会話を再開できる状態にします。",
           statBackupTitle: "バックアップ前提",
           statBackupBody: "整理作業は確認済みの保守ステップに分離します。",
+          releaseTitle: "v0.5.0：アーカイブ前に事前確認",
+          releaseCopy: "安全境界を実行経路に組み込み、パス、handoff、thread 状態、重複、保存先競合を移動前に確認します。",
+          releasePathTitle: "source パスを限定",
+          releasePathBody: "Codex sessions ルート内の active JSONL のみをアーカイブ対象にできます。",
+          releaseStateTitle: "ファイルと DB を一致",
+          releaseStateBody: "各 source は state_5.sqlite の active thread に対応する必要があります。",
+          releaseBlockerTitle: "fail-closed blocker",
+          releaseBlockerBody: "Desktop、app-server、helper、Crashpad が動作中なら停止し、検査失敗も安全とは見なしません。",
+          releaseTestTitle: "安全動作を回帰テスト",
+          releaseTestBody: "パス逸脱、未登録 session、blocker 検出、process 検査失敗をテストします。",
           audienceTitle: "誰の何を助けるか",
           audienceCopy: "Codex のローカル健康診断のようなものです。患者や医療ファイルを診断せず、Codex のローカル状態だけを確認し、なぜ遅いかと次に安全に何をするかを示します。",
           audienceMedicalTitle: "医療者・研究者",
@@ -977,8 +1098,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           metricLogsBody: "ログサイズと warning target を集計します。64 MB は監視、100 MB はバックアップ後のローテーション候補です。",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "ローカルの読み込み面を数え、プラグインと Skill の warning パターンを示します。",
-          mapAlt: "Codex のローカル状態モジュールを示す臨床診断風マップ",
-          mapCaption: "重要なラベルは画像ではなくページ側で示します。sessions、logs、plugins、skills、model cache を別々のシグナルとして確認します。",
+          mapAlt: "ドラえもんが案内する Codex ローカル状態マップ",
+          mapCaption: "ドラえもんが sessions、logs、plugins、skills、model cache の 5 領域を巡り、中央の laptop を囲む証拠をまとめて確認します。",
           workflowTitle: "アーカイブ前に handoff",
           workflowCopy: "安全な流れは、診断、handoff 作成、session パスと DB 状態の事前確認、Codex blocker の終了待ち、そしてバックアップと復元手順を伴うアーカイブです。",
           stepDiagnoseTitle: "診断",
@@ -991,8 +1112,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           stepIndexBody: "後からトピックで旧作業を見つけられる記録を残します。",
           stepRestoreTitle: "復元",
           stepRestoreBody: "session が必要になったらバックアップと復元スクリプトを使います。",
-          workflowAlt: "大きなチャットから handoff メモ、アーカイブへ進む臨床引き継ぎ風フロー",
-          workflowCaption: "Handoff は短く読める継続メモです。元の session を置き換えるものではなく、作業へ戻るための安全な橋です。",
+          workflowAlt: "エンジニアとドラえもんが handoff を残してからアーカイブする流れ",
+          workflowCaption: "赤い糸は継続性です。大きな会話を理解し、handoff を作り、バックアップと復元経路を持つアーカイブへ進みます。",
           safetyTitle: "安全境界",
           safetyCopy: "Codex Speed Doctor は診断ツールであり、クリーナーではありません。変更を伴う保守コマンドの前に、どこが遅そうかを答えます。",
           safetyCleanupTitle: "自動清掃なし",
@@ -1005,9 +1126,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           safetyDetailsSuffix: " フラグが必要です。",
           safetyReviewedTitle: "整理はレビュー可能に",
           safetyReviewedBody: "アーカイブと復元は backup-first の保守フローに置きます。",
-          safetyAlt: "ローカル診断の読み取り専用安全境界図",
-          safetyCaption: "既定はローカル、読み取り専用、匿名化です。最初の診断を低リスクにできます。",
-          footerLeft: "Codex Speed Doctor · MIT",
+          safetyAlt: "ドラえもんが守る読み取り専用の診断境界",
+          safetyCaption: "中央は読み取り専用、認証情報は密封、backup は分離。blocker 解消と明示確認後だけ保守作業が入ります。",
+          footerLeft: "Codex Speed Doctor · v0.5.0 · Anita · MIT",
           footerRight: "GitHub Pages ソース: "
         },
         ko: {
@@ -1026,6 +1147,16 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           statHandoffBody: "아카이브 전에 긴 대화를 이어갈 수 있게 만듭니다.",
           statBackupTitle: "백업 인식",
           statBackupBody: "정리 작업은 별도로 검토된 유지보수 단계에 둡니다.",
+          releaseTitle: "v0.5.0: 아카이브 전 사전 점검",
+          releaseCopy: "경로, handoff, thread 상태, 중복, 대상 충돌을 파일 이동 전에 확인하도록 안전 경계를 실행 경로에 넣었습니다.",
+          releasePathTitle: "source 경로 제한",
+          releasePathBody: "Codex sessions 루트 안의 active JSONL만 아카이브 계획에 들어갈 수 있습니다.",
+          releaseStateTitle: "파일과 DB 일치",
+          releaseStateBody: "각 source는 state_5.sqlite의 active thread와 연결되어야 합니다.",
+          releaseBlockerTitle: "fail-closed blocker",
+          releaseBlockerBody: "Desktop, app-server, helper, Crashpad가 유지보수를 막으며 검사 실패도 안전으로 취급하지 않습니다.",
+          releaseTestTitle: "회귀 테스트된 안전성",
+          releaseTestBody: "경로 이탈, 미등록 session, blocker 인식, process 검사 실패를 테스트합니다.",
           audienceTitle: "누구에게 도움이 되나",
           audienceCopy: "Codex의 로컬 건강검진처럼 생각하면 됩니다. 환자나 의료 파일을 진단하지 않고, 로컬 Codex 상태만 확인해 왜 느린지와 다음 안전한 조치를 알려줍니다.",
           audienceMedicalTitle: "의료인과 연구자",
@@ -1062,8 +1193,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           metricLogsBody: "로그 크기와 warning target을 요약합니다. 64 MB부터 관찰하고 100 MB부터 백업 후 회전을 검토합니다.",
           metricPluginsTitle: "Plugins and Skills",
           metricPluginsBody: "로컬 로딩 범위를 계산하고 플러그인과 Skill warning 패턴을 강조합니다.",
-          mapAlt: "Codex 로컬 상태 모듈의 임상 진단식 지도",
-          mapCaption: "핵심 라벨은 이미지가 아니라 페이지 텍스트로 제공합니다. sessions, logs, plugins, skills, model cache를 별도 신호로 확인합니다.",
+          mapAlt: "도라에몽이 안내하는 Codex 로컬 상태 지도",
+          mapCaption: "도라에몽이 sessions, logs, plugins, skills, model cache의 다섯 구역을 돌며 중앙 laptop 주변의 근거를 함께 확인합니다.",
           workflowTitle: "아카이브 전에 handoff",
           workflowCopy: "가장 안전한 흐름은 진단, handoff 작성, session 경로와 DB 상태 사전 점검, Codex blocker 종료 대기, 백업 및 복원 자료와 함께 아카이브하는 것입니다.",
           stepDiagnoseTitle: "진단",
@@ -1076,8 +1207,8 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           stepIndexBody: "나중에 주제로 예전 작업을 찾을 수 있는 기록을 남깁니다.",
           stepRestoreTitle: "복원",
           stepRestoreBody: "session이 다시 필요할 때 백업과 복원 스크립트를 사용합니다.",
-          workflowAlt: "큰 채팅에서 handoff 문서와 아카이브로 이어지는 임상 인계식 흐름",
-          workflowCaption: "Handoff는 짧고 읽기 쉬운 이어받기 메모입니다. 원본 session을 대체하지 않고 작업으로 돌아가는 안전한 다리 역할을 합니다.",
+          workflowAlt: "엔지니어와 도라에몽이 handoff를 남긴 뒤 아카이브하는 흐름",
+          workflowCaption: "붉은 실은 연속성을 뜻합니다. 큰 대화를 이해하고 handoff를 만든 뒤 백업과 복원 경로가 있는 아카이브로 이동합니다.",
           safetyTitle: "안전 경계",
           safetyCopy: "Codex Speed Doctor는 진단 도구이지 클리너가 아닙니다. 변경을 수반하는 유지보수 명령 전에 무엇이 느릴 가능성이 있는지 먼저 답합니다.",
           safetyCleanupTitle: "자동 정리 없음",
@@ -1090,9 +1221,9 @@ PYTHONPATH=src python3 -m codex_speed_doctor.cli --log-growth-seconds 0</code></
           safetyDetailsSuffix: " 플래그가 필요합니다.",
           safetyReviewedTitle: "정리는 검토 가능하게",
           safetyReviewedBody: "아카이브와 복원은 backup-first 유지보수 흐름에 둡니다.",
-          safetyAlt: "로컬 진단을 위한 읽기 전용 안전 경계 다이어그램",
-          safetyCaption: "기본 자세는 로컬, 읽기 전용, 익명화입니다. 첫 진단을 낮은 위험으로 시작할 수 있습니다.",
-          footerLeft: "Codex Speed Doctor · MIT",
+          safetyAlt: "도라에몽이 지키는 읽기 전용 진단 경계",
+          safetyCaption: "중앙은 읽기 전용이고 인증 정보는 봉인되며 backup은 분리됩니다. blocker 해제와 명시적 확인 후에만 유지보수가 들어갑니다.",
+          footerLeft: "Codex Speed Doctor · v0.5.0 · Anita · MIT",
           footerRight: "GitHub Pages 소스: "
         }
       };

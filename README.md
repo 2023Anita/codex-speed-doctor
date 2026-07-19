@@ -1,85 +1,64 @@
 # Codex Speed Doctor
 
-> A local check-up for slow Codex. Find the cause before you clean anything.
+> Diagnose first. Preserve context. Change local state only with evidence and consent.
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2563eb)](pyproject.toml)
-[![MIT License](https://img.shields.io/badge/license-MIT-16a34a)](LICENSE)
-[![Read Only First](https://img.shields.io/badge/default-read--only-0f766e)](docs/SAFETY.md)
-[![Local First](https://img.shields.io/badge/local--first-diagnostics-0891b2)](docs/TROUBLESHOOTING.md)
+[![Version](https://img.shields.io/badge/version-0.5.0-149bd7)](docs/ROADMAP.md)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-1167a8)](pyproject.toml)
+[![CI](https://github.com/2023Anita/codex-speed-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/2023Anita/codex-speed-doctor/actions/workflows/ci.yml)
+[![Default](https://img.shields.io/badge/default-read--only-f3c84b)](docs/SAFETY.md)
+[![License](https://img.shields.io/badge/license-MIT-e54b4b)](LICENSE)
 
-**Languages**: [中文](#中文) · [English](#english) · [日本語](#日本語) · [한국어](#한국어)
+**Languages**: [中文](#中文简介) · [English](#english) · [日本語](#日本語) · [한국어](#한국어)
+**Live page**: [2023anita.github.io/codex-speed-doctor](https://2023anita.github.io/codex-speed-doctor/)
 
-The GitHub Pages page supports instant in-page switching between Chinese, English, Japanese, and Korean: [docs/index.html](docs/index.html).
+![A software engineer and Doraemon inspecting Codex local state together](docs/assets/hero-codex-diagnostic.png)
 
-## 中文
+*The project’s visual metaphor: an engineer investigates the evidence while Doraemon brings the right tool—never a magic “delete everything” button.*
 
-**中文**：Codex Speed Doctor 是一个本地优先、默认只读的诊断工具，用来判断 Codex Desktop 或 CLI 为什么变慢：是 active session 太大、日志膨胀、插件/Skill warning、model cache 异常，还是本地进程状态不对。
+## 中文简介
 
-如果你不是工程师，也可以把它理解成 **Codex 的体检报告**：
+Codex Speed Doctor 是一个本地优先、默认只读的 Codex Desktop / CLI 诊断工具。它帮助你判断卡顿究竟来自大会话、日志增长、插件或 Skill warning、model cache，还是残留进程，而不是一上来就清理文件。
 
-- 不上来就“清理垃圾”，先看哪里真的异常。
-- 不读取你的密钥、账号、Cookie 或私人项目内容。
-- 不默认删除文件、不移动会话、不修改配置。
-- 把技术问题翻译成下一步可执行建议，例如“先写交接说明，再归档超大的旧对话”。
+这个项目来自 Anita 的真实工作方式：长期使用 Codex 完成科研、数据分析、教学材料和复杂项目，因此既重视性能，也重视对话上下文不能轻易丢失。
+
+核心原则只有一句：**像工程师一样先测量，像研究者一样保留证据，再进行可恢复的维护。**
 
 ## English
 
-**English**: Codex Speed Doctor is a local-first, read-only diagnostic tool for slow Codex Desktop or CLI startup. It checks oversized active sessions, large logs, plugin or skill warnings, model cache state, and local process pressure before you touch anything.
+Codex Speed Doctor is a local-first, read-only-by-default diagnostic tool for slow Codex Desktop or CLI startup. It separates oversized sessions, log growth, plugin or Skill warnings, model-cache state, and process blockers before recommending any maintenance.
 
 ## 日本語
 
-**日本語**: Codex Speed Doctor は、Codex Desktop または CLI の起動が遅い原因を調べるローカル優先・既定読み取り専用の診断ツールです。大きな active session、肥大化したログ、plugin/Skill warning、model cache の状態、ローカルプロセスの負荷を整理して確認します。
+Codex Speed Doctor は、Codex Desktop / CLI の遅延原因を調べるローカル優先・既定読み取り専用の診断ツールです。session、log、plugin、Skill、model cache、process blocker を分けて確認してから、安全な次の一手を示します。
 
 ## 한국어
 
-**한국어**: Codex Speed Doctor는 Codex Desktop 또는 CLI 시작이 느린 원인을 확인하는 로컬 우선, 기본 읽기 전용 진단 도구입니다. 큰 active session, 커진 로그, plugin/Skill warning, model cache 상태, 로컬 프로세스 압력을 점검합니다.
+Codex Speed Doctor는 느린 Codex Desktop / CLI의 원인을 확인하는 로컬 우선, 기본 읽기 전용 진단 도구입니다. session, log, plugin, Skill, model cache, process blocker를 분리해 확인한 뒤 안전한 다음 조치를 제안합니다.
 
-![Codex Speed Doctor hero](docs/assets/hero-codex-diagnostic.png)
+## What changed in v0.5.0
 
-## Who This Is For
+This release turns the archive workflow from “backup-aware” into a stricter, preflight-gated operation.
 
-Codex Speed Doctor is useful when:
+| Change | Before | v0.5.0 | Advantage |
+| --- | --- | --- | --- |
+| Session path boundary | An absolute manifest path could point outside the sessions tree | Every source must resolve under `<codex_home>/sessions` | Prevents unrelated files from being moved |
+| Thread-state validation | A file could be archived without a matching active thread | Every source must match an active `state_5.sqlite` record | Filesystem and database state stay aligned |
+| Blocker detection | Process checks focused mainly on app-server | Desktop, app-server, OpenAI Codex helpers, and relevant Crashpad processes are blockers | Maintenance waits for the real writers to exit |
+| Fail-closed behavior | A failed `ps` inspection could look like “nothing is running” | Process-inspection failure stops the archive | Unknown state is never treated as safe |
+| Full preflight | Validation and mutation were partly interleaved | Handoff, source, thread, uniqueness, and destination are checked before backup directories are created | Invalid plans fail without partial work |
+| Regression coverage | Core archive flow was tested | New tests cover boundary escape, unregistered sessions, blocker matching, and inspection failure | Safety behavior remains reviewable and repeatable |
 
-- You use Codex for clinical research, medical writing, literature review,
-  data analysis, teaching materials, or long-running AI projects.
-- Codex starts slowly, gets stuck while loading models, or feels heavier after
-  many long conversations.
-- You want to clean local Codex state safely but do not want to accidentally
-  delete useful chat history.
-- You need a simple handoff-first workflow so important work can be resumed
-  from a short note even after old giant sessions are archived.
+### Why this is better than coarse cleanup
 
-For medical and non-technical users: this tool does **not** diagnose patients or
-medical data. It diagnoses the local Codex app state on your computer, much like
-checking whether a workstation is slow because the logbook is huge, too many old
-cases are open, or a plugin keeps warning in the background.
+- It distinguishes **evidence** from assumptions.
+- It preserves valuable work with a handoff before moving a large session.
+- It treats SQLite main/WAL/SHM files as one group.
+- It produces backups, manifests, indexes, and restore scripts.
+- It refuses to mutate when the environment cannot be proven safe.
 
-## In Plain Language
+## Quick start
 
-| If Codex feels... | This tool checks... | What you learn |
-| --- | --- | --- |
-| Slow to open | Whether too many large active conversations are still in the startup path | Which old conversations should get handoff notes before archiving |
-| Stuck around model loading | Whether logs mention model, auth, timeout, or network events | Whether this looks like a local cache/process issue or something outside sessions |
-| Noisy after adding tools | Whether plugins or Skills are producing loader warnings | Which area to inspect before disabling anything |
-| Hard to clean safely | Whether logs or sessions crossed conservative review thresholds | What to back up first and what not to touch while Codex is running |
-
-## Why It Matters
-
-Long Codex conversations are valuable, especially in research and clinical
-workflow building. But very large active sessions can make the app heavier to
-resume. Codex Speed Doctor helps separate **memory worth keeping** from **local
-state that should leave the hot path**.
-
-The value is not automatic cleanup. The value is safer decision-making:
-
-1. See the local bottleneck.
-2. Preserve important context in a handoff note.
-3. Archive only what you explicitly selected.
-4. Keep restore artifacts so a mistaken archive can be reversed.
-
-## Quick Start
-
-最快只读运行：
+Run directly from the repository:
 
 ```bash
 git clone https://github.com/2023Anita/codex-speed-doctor.git
@@ -87,289 +66,164 @@ cd codex-speed-doctor
 PYTHONPATH=src python3 -m codex_speed_doctor.cli
 ```
 
-安装成本地命令：
+Install editable commands:
 
 ```bash
 python3 -m pip install -e .
 codex-speed-doctor
 ```
 
-机器可读输出：
+Useful read-only modes:
 
 ```bash
-PYTHONPATH=src python3 -m codex_speed_doctor.cli --json
-```
+# Machine-readable, pseudonymous report
+codex-speed-doctor --json
 
-The default report is read-only and pseudonymous. It does not move sessions, delete files, rewrite config, or print raw local session paths.
-
-## Practical Thresholds
-
-The project uses conservative maintenance thresholds learned from real Codex
-Desktop cleanup runs:
-
-- Active sessions above **50 MB** are treated as priority handoff/archive
-  candidates. They are not archived automatically.
-- `logs_2.sqlite` above **64 MB** is watch-worthy.
-- `logs_2.sqlite` above **100 MB** should trigger a backup-first log rotation
-  plan after Codex is closed.
-- Active log burn is treated as a combined condition: **TRACE at or above 70%**
-  and `logs_2.sqlite*` bytes or `logs` rows still growing during the sample
-  window.
-
-These thresholds are prompts for review, not automatic cleanup rules. The safe
-sequence is still diagnose, write handoffs, confirm, then archive or rotate.
-
-## Log Burn Detection
-
-Some quick-fix advice for large Codex logs suggests blocking SQLite inserts or
-symlinking the log database into a temporary directory. Codex Speed Doctor takes
-a safer path: it first separates **historical log volume** from **active disk
-burn**.
-
-The default report samples log growth for 5 seconds and reports:
-
-- `trace_percent`: how much of the log table is TRACE.
-- `growth_bytes_delta`: whether the `logs_2.sqlite*` file group grew.
-- `growth_rows_delta`: whether new log rows were inserted.
-
-That means a TRACE-heavy log file is not automatically treated as a crisis. It
-is only flagged as active log burn when TRACE is dominant and the database keeps
-growing during the sample.
-
-Skip the wait when you only need a static snapshot:
-
-```bash
+# Static snapshot without the five-second growth sample
 codex-speed-doctor --log-growth-seconds 0
+
+# Reveal local filenames and paths only when explicitly needed
+codex-speed-doctor --details
 ```
 
-This is intentionally more conservative than coarse fixes:
+## What it diagnoses
 
-| Coarse approach | Risk | Codex Speed Doctor approach |
+![Doraemon guiding a map of Codex local-state areas](docs/assets/local-state-map.png)
+
+*Doraemon’s inspection map: conversation scrolls represent sessions, the open logbook represents logs, modular blocks represent plugins, the stitched manual represents Skills, and the tool chest represents model cache. The laptop stays at the center because the report evaluates these signals together.*
+
+| Area | Evidence collected | Why it matters |
 | --- | --- | --- |
-| Block inserts with a SQLite trigger | Hides diagnostics and mutates a live database | Keep diagnostics read-only; recommend backup-first rotation after Codex exits |
-| Symlink `logs_2.sqlite` into `/tmp` | Can confuse SQLite/WAL handling and lose useful evidence | Treat `logs_2.sqlite`, WAL, and SHM as one group |
-| Delete or move only the main database | Can leave WAL/SHM state inconsistent | Back up and rotate the whole SQLite file group together |
+| Sessions | Active/archived thread counts, active size, large files | Large active conversations can remain in the startup path |
+| Logs | SQLite file-group size, levels, warning targets, sampled growth | Separates historical volume from active disk burn |
+| Plugins | Cache footprint and manifest warning targets | Identifies load-time noise before disabling anything |
+| Skills | `SKILL.md` count, footprint, loader warnings | Finds malformed or unexpectedly heavy skill surfaces |
+| Model cache | Presence, size, and age | Adds local evidence for “loading models” stalls |
+| Processes | Codex and Node process summary | Distinguishes disk state from live-process pressure |
 
-## What It Diagnoses
+## Practical thresholds
 
-![Local state map](docs/assets/local-state-map.png)
+Thresholds are review prompts—not permission to clean automatically.
 
-| Area | What it checks | Why it matters |
-| --- | --- | --- |
-| Sessions | active thread count, archived thread count, large active session files | Huge active sessions can stay in the hot startup path and make new windows feel slow. |
-| Logs | `logs_2.sqlite` size, warning/error targets, model/auth/network related events | Logs reveal repeated loader, plugin, cache, or network failures without reading private chat content. |
-| Plugins | plugin cache size and sampled plugin folders | Manifest or loader warnings can add startup work or noisy retries. |
-| Skills | `SKILL.md` count and skill folder size | Broken or stale skills can produce loader warnings before the UI is ready. |
-| Model cache | presence, size, and age of `models_cache.json` | A stale or suspicious cache can correlate with "loading models" stalls. |
-| Processes | Codex process count, Node process count, top Node memory usage | Helps separate local-state pressure from a live process issue. |
+- Active session above **50 MB** → review for handoff.
+- `logs_2.sqlite*` at or above **64 MB** → watch growth.
+- `logs_2.sqlite*` at or above **100 MB** → plan backup-first rotation after Codex exits.
+- TRACE at or above **70%** plus byte or row growth → active log-burn signal.
+- High TRACE without sampled growth → historical TRACE-heavy logging.
 
-## Recommended Workflow
+## Handoff-first archive
 
-![Handoff archive flow](docs/assets/handoff-archive-flow.png)
+![Doraemon and an engineer preserving a handoff before archive](docs/assets/handoff-archive-flow.png)
 
-1. **Diagnose**: run `codex-speed-doctor` first and identify the actual bottleneck.
-2. **Handoff**: for important long conversations, write a short continuation note before archiving anything.
-3. **Archive**: move only the inactive giant sessions out of the active path using a backup-first maintenance workflow.
-4. **Index**: keep a small handoff index so old work can be found by topic later.
-5. **Restore**: keep the backup and restore script so a mistaken archive can be reversed.
+*The red thread is continuity: first understand the large conversation, then distill a concise handoff, and only then place the selected session into a recoverable archive. The path loops back because restoration remains possible.*
 
-This tool intentionally stops at diagnosis. Cleanup should be a separate, explicit step after you have reviewed the report.
+The workflow is deliberately staged:
 
-## Deferred Archive
+1. **Diagnose** — measure before changing anything.
+2. **Handoff** — preserve goal, completed work, files, constraints, and next steps.
+3. **Confirm** — show the exact selected sessions and mutation.
+4. **Preflight** — validate path containment, active thread state, uniqueness, and destination.
+5. **Archive** — wait for blockers, back up SQLite, move selected files, and update thread state.
+6. **Verify** — rerun diagnosis and retain restore artifacts.
 
-v0.2 adds an explicit, backup-first archive workflow for oversized Codex session
-files. The default `codex-speed-doctor` command is still read-only; archive
-actions live behind separate commands.
-
-Create a manifest after you have written a handoff note:
+Manifest format:
 
 ```jsonl
-{"slug":"long-running-task","handoff":"/Users/me/Documents/Codex/handoffs/2026-05-17-task.md","source":"/Users/me/.codex/sessions/2026/05/15/rollout-example.jsonl"}
+{"slug":"long-running-task","handoff":"/absolute/path/handoff.md","source":"/absolute/path/rollout.jsonl"}
 ```
 
-From inside Codex, start a deferred archive job:
+Deferred archive from inside Codex:
 
 ```bash
 codex-speed-doctor-defer-archive --manifest "/absolute/path/manifest.jsonl"
 ```
 
-It returns immediately with:
-
-```text
-job_id deferred-archive-...
-log_path /Users/me/.codex/archive_jobs/.../archive.log
-status_path /Users/me/.codex/archive_jobs/.../status.json
-```
-
-Before creating backup or archive directories, the worker preflights every
-manifest record. Each source must be a unique active `.jsonl` under
-`<codex_home>/sessions`, have an existing handoff, match `state_5.sqlite`, and
-resolve to a non-conflicting archive destination.
-
-The background worker waits until Codex Desktop, app-server, OpenAI Codex
-helpers, and relevant Crashpad processes exit, then runs the safe archive
-command. Process-inspection errors fail closed instead of being treated as a
-safe-to-continue state. Check progress with:
+Direct worker from Terminal after Codex is closed:
 
 ```bash
-cat "/path/to/status.json"
-tail -n 40 "/path/to/archive.log"
+codex-speed-doctor-archive \
+  --manifest "/absolute/path/manifest.jsonl" \
+  --wait-for-codex-exit
 ```
 
-Status values:
+Generated artifacts include a `state_5.sqlite` backup, `moved-sessions.jsonl`, `restore-selected-sessions.py`, and `archive-index.md`.
 
-- `queued` / `launching`: the job was prepared.
-- `waiting`: the worker is waiting for Codex to exit.
-- `archiving`: backup and archive work is running.
-- `done`: archive completed and restore artifacts were written.
-- `failed` / `skipped`: read the log and status details.
+## Safety model
 
-If a job remains in `waiting`, it is usually protecting local state rather than
-failing. Check `status.json` and `archive.log` first. Common blockers include a
-freshly reopened Codex app, `codex app-server` processes, older npm/CLI
-app-server processes, or Codex Desktop `browser_crashpad_handler` helpers that
-survived after the visible window closed. Quit Codex fully, inspect blockers
-from a normal Terminal, stop stale Codex processes only after review, and reopen
-Codex only after the status is `done` or `failed`. Newer deferred jobs remove
-their `launchctl` label after completion, and the archive worker is idempotent
-when a status file already says `done`.
+![Doraemon guarding the read-only diagnostic boundary](docs/assets/safety-boundary.png)
 
-If Codex is already closed and you are in a normal Terminal, you can run the
-worker directly:
-
-```bash
-codex-speed-doctor-archive --manifest "/absolute/path/manifest.jsonl" --wait-for-codex-exit
-```
-
-The archive worker writes a `state_5.sqlite` backup, `moved-sessions.jsonl`,
-`restore-selected-sessions.py`, and `archive-index.md`.
-
-## Log Rotation Note
-
-Large `logs_2.sqlite` files can slow diagnosis and startup recovery. Rotate logs
-only after Codex is closed, or through a deferred helper that waits for Codex
-processes to exit. Treat these files as one SQLite group:
-
-- `~/.codex/logs_2.sqlite`
-- `~/.codex/logs_2.sqlite-wal`
-- `~/.codex/logs_2.sqlite-shm`
-
-Back up and move the whole group together. Do not live-rotate logs while Codex
-is running, because SQLite WAL/SHM state can become inconsistent.
-
-## Safety Model
-
-![Safety boundary](docs/assets/safety-boundary.png)
+*Doraemon guards the central read-only workspace. Credentials remain sealed, backups remain separate, and the process gate must be clear before a confirmed maintenance action can enter.*
 
 Default behavior:
 
-- read-only report mode
-- no automatic cleanup
-- no session moves
-- no worktree archive
-- no `config.toml` rewrite
-- no `auth.json` read or output
-- no raw session filenames unless you explicitly pass `--details`
+- read-only and pseudonymous report
+- no automatic cleanup or archive
+- no `auth.json`, API-key, token, or cookie readout
+- no raw session paths unless `--details` is explicitly used
+- no archive when process inspection fails
+- no session source outside `<codex_home>/sessions`
+- no live log rotation
 
-See [docs/SAFETY.md](docs/SAFETY.md) for the full boundary and [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for symptom-based fixes.
+Read the full [safety boundary](docs/SAFETY.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md).
 
-## Example Output
+## Log rotation rules
+
+Treat the following as one SQLite group:
 
 ```text
-Codex Speed Doctor
-==================
-mode: read-only
-codex_home: ~/.codex
-
-Sessions
-- total_threads: 253
-- active_threads: 94
-- archived_threads: 159
-- active_sessions_gb: 1.836
-- large_session_threshold_mb: 50
-- large_active_sessions:
-  - session_001: 638.0 MB
-  - session_002: 484.0 MB
-
-Logs
-- logs_mb: 88.9
-- log_watch_mb: 64
-- log_cleanup_mb: 100
-- total_rows: 1932
-- level_counts: INFO=561, TRACE=1287, WARN=84
-- trace_percent: 66.61
-- trace_dominant_percent: 70.0
-- growth_sample_seconds: 5.0
-- growth_bytes_delta: 0
-- growth_rows_delta: 0
-- warning_targets: codex_core_plugins::manifest=20, codex_core_skills::loader=64
-- model_auth_network_events: 12
-
-Plugins and Skills
-- plugin_cache_mb: 245.3
-- plugin_dirs_sampled: 42
-- skills_mb: 18.7
-- skill_files: 66
-
-Model Cache
-- exists: true
-- size_kb: 24.1
-- age_hours: 7.4
-
-Recommendations
-- 2 active session(s) are above 50 MB. Treat them as priority handoff/archive candidates: create handoffs first, then archive only after confirmation.
-- Skill loader warnings detected. Inspect the affected SKILL.md files before disabling anything.
+~/.codex/logs_2.sqlite
+~/.codex/logs_2.sqlite-wal
+~/.codex/logs_2.sqlite-shm
 ```
 
-## Commands
+Do not live-rotate, truncate only the main database, add insert-blocking triggers, or symlink the database to `/tmp` as a normal remedy.
 
-```bash
-# Default read-only report
-codex-speed-doctor
+## Project layout
 
-# JSON output for automation
-codex-speed-doctor --json
+```text
+src/codex_speed_doctor/
+├── cli.py              # read-only diagnosis
+├── archive.py          # preflight + backup-first archive
+└── defer_archive.py    # macOS deferred launcher
 
-# Static snapshot without waiting for the growth sample
-codex-speed-doctor --log-growth-seconds 0
+tests/
+├── test_cli.py
+└── test_archive.py
 
-# Show local paths and raw session filenames
-codex-speed-doctor --details
+docs/
+├── index.html          # multilingual GitHub Pages site
+├── SAFETY.md
+├── TROUBLESHOOTING.md
+├── ROADMAP.md
+└── assets/             # generated explanatory illustrations
 
-# Use a custom Codex home
-codex-speed-doctor --codex-home "/path/to/.codex"
-
-# Change the large-session threshold
-codex-speed-doctor --large-session-mb 100
-
-# Start a safe deferred archive job from inside Codex
-codex-speed-doctor-defer-archive --manifest "/absolute/path/manifest.jsonl"
-
-# Run the backup-first archive worker directly
-codex-speed-doctor-archive --manifest "/absolute/path/manifest.jsonl" --wait-for-codex-exit
+.github/workflows/ci.yml # Python 3.10–3.13 verification
 ```
 
-## GitHub Pages
-
-The polished project page lives at [docs/index.html](docs/index.html). After publishing the repository, enable GitHub Pages from the `/docs` directory.
-
-## Development
+## Development and verification
 
 ```bash
 python3 -m pip install -e .
-PYTHONPATH=src python3 -m unittest discover -s tests
-PYTHONPATH=src python3 -m codex_speed_doctor.cli
-PYTHONPATH=src python3 -m codex_speed_doctor.cli --json
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+PYTHONPATH=src python3 -m codex_speed_doctor.cli --json --log-growth-seconds 0
 ```
 
-## Design Assets
+Current verification baseline: **14 tests passing** on Python 3.13, plus Python syntax and HTML parse checks.
 
-- [docs/assets/hero-codex-diagnostic.png](docs/assets/hero-codex-diagnostic.png)
-- [docs/assets/local-state-map.png](docs/assets/local-state-map.png)
-- [docs/assets/handoff-archive-flow.png](docs/assets/handoff-archive-flow.png)
-- [docs/assets/safety-boundary.png](docs/assets/safety-boundary.png)
-- [design/figma-brief.md](design/figma-brief.md)
+Contributions are welcome when they preserve the safety model. Read
+[CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request and use
+[SECURITY.md](SECURITY.md) for vulnerability reporting.
+
+## Design note
+
+The v0.5.0 visual system uses ChatGPT-generated Japanese hand-drawn illustrations with a Doraemon collaboration motif. Explanatory text remains in HTML and Markdown so it stays accurate, searchable, translatable, and accessible.
+
+Doraemon is a third-party fictional character. This independent open-source project is not affiliated with or endorsed by the character’s rights holders.
+
+## Author
+
+Built by **Anita** from real long-running Codex workflows across research, data analysis, teaching, writing, and agentic engineering.
 
 ## License
 
-MIT
+Code is released under the [MIT License](LICENSE). Third-party character rights are not granted by this repository’s MIT license.

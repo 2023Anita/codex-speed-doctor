@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codex-speed-doctor"
-version = "0.1.0"
-description = "Privacy-first diagnostics for slow Codex Desktop or CLI startup."
+version = "0.5.0"
+description = "Local-first diagnostics and backup-first maintenance for slow Codex Desktop or CLI startup."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

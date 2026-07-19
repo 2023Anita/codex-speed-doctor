@@ -8,7 +8,9 @@ Positioning line:
 
 > Find why Codex feels slow before you clean anything.
 
-Tone: clinical, precise, calm, trustworthy. Treat Codex slowness like a local-state health check.
+Tone: engineering-led, precise, calm, trustworthy, and quietly playful. The
+engineer investigates evidence while Doraemon represents the right reversible
+tool—not a magic cleanup button.
 
 ## Audience
 
@@ -25,41 +27,47 @@ Tone: clinical, precise, calm, trustworthy. Treat Codex slowness like a local-st
 
 ## Visual Direction
 
-Use a medical diagnostic interface style:
+Use a refined Japanese editorial illustration system:
 
-- bright clinical background
-- blue, teal, cyan, and white as primary colors
-- small amber/red accents only for warnings
-- precise panels, thin dividers, soft shadows
-- no official brand marks or fake app logos
-- no text baked into AI-generated images; labels should be real HTML/Figma text layers
+- warm ivory washi-paper background with subtle blue atmosphere
+- Doraemon sky blue, white, red, and yellow accents with deep indigo ink
+- sumi-like linework and watercolor texture in generated illustrations
+- precise information hierarchy and generous breathing room
+- rounded future-gadget details used sparingly
+- no long text baked into AI-generated images; labels remain real HTML/Figma text
+- pair every illustration with a title, explanation, accessible alt text, and caption
 
 ## Palette
 
 | Role | Hex |
 | --- | --- |
-| Ink | `#0f172a` |
-| Muted text | `#475569` |
-| Subtle text | `#64748b` |
-| Paper | `#f8fbfd` |
-| Panel | `#ffffff` |
-| Line | `#d9e7ef` |
-| Teal | `#0f766e` |
-| Cyan | `#0891b2` |
-| Blue | `#1d4ed8` |
+| Ink | `#17324d` |
+| Muted text | `#496174` |
+| Subtle text | `#6c7f8d` |
+| Paper | `#fffaf0` |
+| Panel | `#fffdf7` |
+| Line | `#d8e3df` |
+| Teal | `#187e9d` |
+| Cyan | `#149bd7` |
+| Blue | `#1167a8` |
+| Red | `#e54b4b` |
+| Yellow | `#f3c84b` |
 | Green | `#16a34a` |
 | Amber | `#d97706` |
 | Danger | `#dc2626` |
 
 ## Typography
 
-Use system UI or Inter.
+Use a distinctive editorial pairing:
+
+- headings: Iowan Old Style / Hiragino Mincho / Yu Mincho
+- body: Avenir Next / Hiragino Sans / Yu Gothic
 
 - Hero H1: 56-64 px desktop, 36 px mobile, strong weight
 - Section H2: 32-36 px desktop, 28 px mobile
 - Body: 16-18 px, line height 1.6
 - Code: SF Mono / Consolas / Liberation Mono
-- Do not use negative letter spacing
+- restrained negative tracking is allowed on large Latin headings only
 
 ## Page Structure
 
@@ -77,30 +85,36 @@ Use system UI or Inter.
      - Handoff-first
      - Backup-aware
 
-3. **Command Panel**
+3. **v0.5.0 Release Story**
+   - Source path confinement
+   - Filesystem/database agreement
+   - Fail-closed process blockers
+   - Regression-tested safety
+
+4. **Command Panel**
    - Terminal-style command block
    - Show source run and JSON mode
    - Keep command text selectable
 
-4. **Local State Map**
+5. **Local State Map**
    - Use `docs/assets/local-state-map.png`
    - Add real text callouts for sessions, logs, plugins, skills, model cache
 
-5. **Handoff Before Archive**
+6. **Handoff Before Archive**
    - Five-step flow: Diagnose, Handoff, Archive, Index, Restore
    - Use `docs/assets/handoff-archive-flow.png`
 
-6. **Safety Boundary**
+7. **Safety Boundary**
    - Safety checklist beside or above `docs/assets/safety-boundary.png`
    - Explicitly state no automatic cleanup and no credential file readout
 
 ## Components
 
-- Card radius: 8 px maximum
-- Buttons: 8 px radius, 44 px minimum height
+- Card radius: 18 px
+- Buttons: pill shape, 44 px minimum height
 - Language switch buttons: compact segmented control, active language clearly filled
 - Section bands: full-width, not floating page cards
-- Image frames: single border, one caption, no nested cards
+- Image frames: single border, one accurate explanatory caption, no nested cards
 - Terminal panel: dark code area with light top chrome
 
 ## Localization
@@ -130,6 +144,9 @@ Use these exact project assets:
 - `docs/assets/safety-boundary.png`
 
 Do not place important labels inside the images. Add labels as editable Figma text or HTML.
+
+Doraemon is a third-party fictional character. Keep an unaffiliated-project
+disclaimer in the README, and do not imply endorsement or ownership.
 
 ## Safety Copy Requirements
 
